@@ -2,14 +2,22 @@ package model;
 
 public class Stock {
     private String name;
-    private int number;
-    private double price;
+    private String ticker;
 
-    public Stock(String name, int number, double price) {
+    public Stock(String name, String ticker) {
         this.name = name;
-        this.number = 0;
-        this.price = price;
+        this.ticker = ticker;
     }
 
+    public Stock(String ticker) {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTicker() {
+        return ticker;
+    }
 }

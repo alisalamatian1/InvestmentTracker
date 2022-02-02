@@ -44,7 +44,7 @@ public class InvestmentPlans {
     public void showDescription() {
         // at the end
         System.out.println("let's check out a " + typeOfInvestment + " investment, that our algorithms suggest for you!");
-        new Investment().showDescription(typeOfInvestment);
+        new Investment(typeOfInvestment);
     }
 
     public void addInvestmentType() {
