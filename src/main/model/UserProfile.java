@@ -1,11 +1,12 @@
 package model;
 
-import java.util.Scanner;
+import ui.UserInteraction;
+
 
 public class UserProfile {
     private String userName;
     private String password;
-    private Scanner scanner = new Scanner(System.in);
+    private UserInteraction userInteraction = new UserInteraction();
 
     //constructor
     public UserProfile() {
@@ -13,12 +14,10 @@ public class UserProfile {
     }
 
     public void makeProfile() {
-        System.out.println("What is your userName?");
-        this.userName = scanner.next();
+        this.userName = userInteraction.askUserName();
         boolean correctPass = false;
         while (!correctPass) {
-            System.out.println("Enter a password at least 8 digits");
-            this.password = scanner.next();
+            this.password = userInteraction.askUserPassword();
             if (password.length() >= 1) {
                 correctPass = true;
             }

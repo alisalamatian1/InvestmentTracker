@@ -1,27 +1,19 @@
 package model;
 
-import java.util.Scanner;
+import ui.UserInteraction;
+
 
 //This is the entry point of the app after users make a profile
 // Here I talk about different investment plans and give users suggestion
 public class InvestmentPlans {
     private String typeOfInvestment;
-    private Scanner scanner = new Scanner(System.in);
+    private UserInteraction userInteraction = new UserInteraction();
 
     //constructor
     public InvestmentPlans() {
-        questionnaire();
+        pickInvestment(userInteraction.questionnaire());
     }
 
-    public void questionnaire() {
-        System.out.println("how much risk you are willing to take?");
-        System.out.println("Remember that ususally the higher the risk the better chance of bigger reward...");
-        System.out.println("\t 1) very little");
-        System.out.println("\t 2) moderate");
-        System.out.println("\t 3) risky");
-        String choiceNumber = scanner.next();
-        pickInvestment(choiceNumber);
-    }
 
     public void pickInvestment(String choiceNumber) {
         switch (choiceNumber) {
@@ -35,8 +27,8 @@ public class InvestmentPlans {
                 typeOfInvestment = "risky";
                 break;
             default:
-                System.out.println("Wrong choice! Please pick again");
-                questionnaire();
+                System.out.println("Wrong choice! Please pick again from the given options.");
+                pickInvestment(userInteraction.questionnaire());
         }
         showDescription();
     }
