@@ -7,7 +7,7 @@ public class PurchasedStock {
 
     public PurchasedStock(Stock stock, int number, double price) {
         this.stock = stock;
-        this.number = 0;
+        this.number = number;
         this.price = price;
     }
 

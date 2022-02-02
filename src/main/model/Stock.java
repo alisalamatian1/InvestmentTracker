@@ -10,7 +10,7 @@ public class Stock {
     }
 
     public Stock(String ticker) {
-
+        this.ticker = ticker;
     }
 
     public String getName() {

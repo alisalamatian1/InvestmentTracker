@@ -1,19 +1,20 @@
 package model;
 
+import ui.UserInteraction;
+
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Scanner;
 
 // In this class users actually do the investment
 public class Investment {
     private String actionType;
-    private Scanner scanner = new Scanner(System.in);
     private String typeOfInvestment;
     private List<Stock> balancedStocks;
     private PurchasedStock purchasedStock;
     private StocksInWallet stocksInWallet = new StocksInWallet();
+    private UserInteraction userInteraction = new UserInteraction();
 
     public Investment(String typeOfInvestment) {
         this.typeOfInvestment = typeOfInvestment;
@@ -30,8 +31,7 @@ public class Investment {
 
     // EFFECT: showing the different possible actions
     private void showActionType() {
-        System.out.println("Do you want to buy(B), sell(S), or quit(Q)?");
-        String answer = scanner.next();
+        String answer = userInteraction.showActionType();
         if (answer.toLowerCase().equals("b")) {
             showDescription();
             buyingStocks();
@@ -48,13 +48,7 @@ public class Investment {
     // MODIFIES: StocksInWallet
     // EFFECT: adding the wanted stock to their wallet
     private void buyingStocks() {
-        System.out.println("What is the ticker of the stock you buying?");
-        Stock purchasingStock = new Stock(scanner.next());
-        System.out.println("How many shares you are buying");
-        int numberOfShares = scanner.nextInt();
-        System.out.println("At what price you are buying? (please check https://finance.yahoo.com for live prices)");
-        double price = scanner.nextDouble();
-        purchasedStock = new PurchasedStock(purchasingStock, numberOfShares, price);
+        purchasedStock = userInteraction.buyingStocksMenu();
         stocksInWallet.addPurchasedStock(purchasedStock);
         showTheWalletContent();
     }
@@ -62,7 +56,7 @@ public class Investment {
     private void showTheWalletContent() {
         ArrayList<PurchasedStock> stocks = stocksInWallet.getStocks();
         for (PurchasedStock stock: stocks) {
-            System.out.println("You have " + stock.getNumber() + "of " + stock.getStock().getTicker());
+            System.out.println("You have " + stock.getNumber() + " shares of " + stock.getStock().getTicker());
             System.out.println("with the value of: " + stock.getPrice() * stock.getNumber());
         }
     }

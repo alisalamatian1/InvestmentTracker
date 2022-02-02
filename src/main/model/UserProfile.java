@@ -19,7 +19,7 @@ public class UserProfile {
         while (!correctPass) {
             System.out.println("Enter a password at least 8 digits");
             this.password = scanner.next();
-            if (password.length() >= 8) {
+            if (password.length() >= 1) {
                 correctPass = true;
             }
         }
