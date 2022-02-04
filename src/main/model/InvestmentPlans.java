@@ -9,19 +9,20 @@ public class InvestmentPlans {
     private String typeOfInvestment;
     private UserInteraction userInteraction = new UserInteraction();
 
-    //constructor
+    // EFFECT: calling pickInvestment function
     public InvestmentPlans() {
         pickInvestment(userInteraction.questionnaire());
     }
 
-
+    // MODIFIES: this
+    // EFFECT: setting the type of investment according to the userInput, then calling showDescription
     public void pickInvestment(String choiceNumber) {
         switch (choiceNumber) {
             case "1":
                 typeOfInvestment = "conservative";
                 break;
             case "2":
-                typeOfInvestment = "balance";
+                typeOfInvestment = "balanced";
                 break;
             case "3":
                 typeOfInvestment = "risky";
@@ -33,9 +34,10 @@ public class InvestmentPlans {
         showDescription();
     }
 
+    // EFFECT: describing the investment plan, and instantiating Investment class
     public void showDescription() {
         // at the end
-        System.out.println("let's check out a " + typeOfInvestment + " investment, that our algorithms suggest for you!");
+        System.out.println("let's check out a " + typeOfInvestment + " investment, that is what our algorithms suggest for you!");
         new Investment(typeOfInvestment);
     }
 

@@ -12,6 +12,7 @@ public class UserInteraction {
 
     }
 
+    // todo: implementing a better algorithm by asking more questions
     public String questionnaire() {
         System.out.println("how much risk you are willing to take?");
         System.out.println("Remember that ususally the higher the risk the better chance of bigger reward...");
@@ -44,4 +45,5 @@ public class UserInteraction {
         System.out.println("What is your password (at least 8 characters or digits)?");
         return scanner.next();
     }
+
 }

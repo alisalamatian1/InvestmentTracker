@@ -9,7 +9,7 @@ public class StocksInWallet {
         this.stocks = new ArrayList<PurchasedStock>();
     }
 
-    public ArrayList getStocks() {
+    public ArrayList<PurchasedStock> getStocks() {
         return stocks;
     }
 
