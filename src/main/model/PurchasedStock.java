@@ -16,7 +16,6 @@ public class PurchasedStock {
     // EFFECT: decreasing the number of shares by the given amount
     public void decreasingTheNumberOfShares(int amount) {
         number -= amount;
-
     }
 
     public int getNumber() {
@@ -29,5 +28,9 @@ public class PurchasedStock {
 
     public Stock getStock() {
         return stock;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

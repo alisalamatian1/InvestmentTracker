@@ -92,7 +92,51 @@ public class Investment {
     // reporting the profit; if not enough funding giving them an error
     public void sellingStocks() {
         soldStock = userInteraction.sellingStockMenu();
-        stocksInWallet.getStocks(); // I have a list of PurchasedStocks; how to take out the specific stock I want??
+        int numberOfRequestedToSellShares = soldStock.getNumber();
+        String tickerSoldStock = soldStock.getStock().getTicker();
+        Boolean enoughFunding = true;
+        int counter = 0;
+        int totalNumberOfSharesOfRequestedStockInWallet = 0;
+        ArrayList<Integer> indexes = new ArrayList<>();
+        int indexThatProvidesTheLastFunding = 0;
+
+        for (PurchasedStock stockInWallet : stocksInWallet.getStocks()) {
+            if (stockInWallet.getStock().getTicker().toLowerCase().equals(tickerSoldStock.toLowerCase())) {
+                if (stockInWallet.getNumber() > numberOfRequestedToSellShares) {
+                    stockInWallet.decreasingTheNumberOfShares(numberOfRequestedToSellShares);
+                    enoughFunding = false;
+                    break;
+                } else {
+                    totalNumberOfSharesOfRequestedStockInWallet += stockInWallet.getNumber();
+                    indexes.add(counter);
+                }
+            }
+            counter++;
+        }
+        if (enoughFunding) {
+            if (totalNumberOfSharesOfRequestedStockInWallet < numberOfRequestedToSellShares) {
+                System.out.println("insufficient funding. Please try again.");
+                sellingStocks();
+            } else {
+                for (int index: indexes) {
+                    PurchasedStock currentlyChecking = stocksInWallet.getStocks().get(index);
+                    if (currentlyChecking.getNumber() < numberOfRequestedToSellShares) {
+                        numberOfRequestedToSellShares -= currentlyChecking.getNumber();
+                    } else if (currentlyChecking.getNumber() > numberOfRequestedToSellShares) {
+                        currentlyChecking.decreasingTheNumberOfShares(numberOfRequestedToSellShares);
+                        indexThatProvidesTheLastFunding = index;
+                        break;
+                    }
+                }
+            }
+        }
+        for (int index : indexes) {
+            if (index == indexThatProvidesTheLastFunding) {
+                break;
+            }
+            stocksInWallet.getStocks().remove(index);
+        }
+        showTheWalletContent();
     }
 
     // MODIFIES: StocksInWallet
