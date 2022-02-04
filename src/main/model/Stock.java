@@ -13,6 +13,7 @@ public class Stock {
         this.ticker = ticker;
     }
 
+
     public String getName() {
         return name;
     }

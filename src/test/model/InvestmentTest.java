@@ -25,4 +25,5 @@ public class InvestmentTest {
         investment.sellingStocks();
         assertTrue(stocksInWallet.getStocks().get(0).getNumber() < numberOfSharesInWallet);
     }
+
 }

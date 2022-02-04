@@ -32,6 +32,16 @@ public class UserInteraction {
         return new PurchasedStock(purchasingStock, numberOfShares, price);
     }
 
+    public PurchasedStock sellingStockMenu() {
+        System.out.println("What stock are you selling? (Enter the ticker)");
+        Stock sellingStock = new Stock(scanner.next());
+        System.out.println("How many shares are you selling?");
+        int numberOfShares = scanner.nextInt();
+        System.out.println("At what price you are selling? (please check https://finance.yahoo.com for live prices)");
+        double price = scanner.nextDouble();
+        return new PurchasedStock(sellingStock, numberOfShares, price);
+    }
+
     public String showActionType() {
         System.out.println("Do you want to buy(B), sell(S), or quit(Q)?");
         return scanner.next();

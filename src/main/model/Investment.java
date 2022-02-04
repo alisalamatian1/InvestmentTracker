@@ -1,5 +1,6 @@
 package model;
 
+import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 import ui.UserInteraction;
 
 import java.sql.Array;
@@ -15,6 +16,7 @@ public class Investment {
     private List<Stock> conservativeStocks;
     private List<Stock> riskyStocks;
     private PurchasedStock purchasedStock;
+    private PurchasedStock soldStock;
     private StocksInWallet stocksInWallet = new StocksInWallet();
     private UserInteraction userInteraction = new UserInteraction();
 
@@ -89,7 +91,8 @@ public class Investment {
     // EFFECT: Selling the chosen n stocks by removing the first n of the particular stock from the user's wallet and
     // reporting the profit; if not enough funding giving them an error
     public void sellingStocks() {
-        // todo 3
+        soldStock = userInteraction.sellingStockMenu();
+        stocksInWallet.getStocks(); // I have a list of PurchasedStocks; how to take out the specific stock I want??
     }
 
     // MODIFIES: StocksInWallet
