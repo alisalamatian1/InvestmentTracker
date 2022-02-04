@@ -11,14 +11,14 @@ import java.util.Locale;
 // In this class users actually do the investment
 public class Investment {
     private String actionType;
-    private String typeOfInvestment;
-    private List<Stock>  balancedStocks;
+    private final String typeOfInvestment;
+    private List<Stock> balancedStocks;
     private List<Stock> conservativeStocks;
     private List<Stock> riskyStocks;
     private PurchasedStock purchasedStock;
     private PurchasedStock soldStock;
-    private StocksInWallet stocksInWallet = new StocksInWallet();
-    private UserInteraction userInteraction = new UserInteraction();
+    private final StocksInWallet stocksInWallet = new StocksInWallet();
+    private final UserInteraction userInteraction = new UserInteraction();
 
     // EFFECT: constructing an Investment object with the given typeOfInvestment and calling a method to show actions
     public Investment(String typeOfInvestment) {
@@ -45,7 +45,7 @@ public class Investment {
         riskyStocks = new ArrayList<Stock>();
         riskyStocks.add(new Stock("ProShares Ultra S&P500", "SSO"));
         riskyStocks.add(new Stock("ProShares UltraPro QQQ", "TQQQ"));
-        for (Stock stock: riskyStocks) {
+        for (Stock stock : riskyStocks) {
             System.out.print(stock.getName() + ", ");
             System.out.println("with the ticker: " + stock.getTicker());
         }
@@ -55,7 +55,7 @@ public class Investment {
         conservativeStocks = new ArrayList<Stock>();
         conservativeStocks.add(new Stock("Vanguard Conservative ETF Portfolio", "VCNS"));
         conservativeStocks.add(new Stock("iShares Core Conservative Balanced ETF Portfolio", "XCNS"));
-        for (Stock stock: conservativeStocks) {
+        for (Stock stock : conservativeStocks) {
             System.out.print(stock.getName() + ", ");
             System.out.println("with the ticker: " + stock.getTicker());
         }
@@ -66,7 +66,7 @@ public class Investment {
         balancedStocks.add(new Stock("Vanguard S&P 500 Index ETF", "VFV"));
         balancedStocks.add(new Stock("Vanguard Balanced ETF Portfolio", "VBAL"));
 
-        for (Stock stock: balancedStocks) {
+        for (Stock stock : balancedStocks) {
             System.out.print(stock.getName() + ", ");
             System.out.println("with the ticker: " + stock.getTicker());
         }
@@ -75,10 +75,10 @@ public class Investment {
     // EFFECT: showing the different possible actions
     public void showActionType() {
         String answer = userInteraction.showActionType();
-        if (answer.toLowerCase().equals("b")) {
+        if (answer.equalsIgnoreCase("b")) {
             showDescription();
             buyingStocks();
-        } else if (answer.toLowerCase().equals("s")) {
+        } else if (answer.equalsIgnoreCase("s")) {
             sellingStocks();
         } else {
             System.out.println("It was nice serving you, see you soon!");
@@ -92,52 +92,77 @@ public class Investment {
     // reporting the profit; if not enough funding giving them an error
     public void sellingStocks() {
         soldStock = userInteraction.sellingStockMenu();
-        int numberOfRequestedToSellShares = soldStock.getNumber();
+        int numberOfToSellShares = soldStock.getNumber();
         String tickerSoldStock = soldStock.getStock().getTicker();
+
+        findingTheStockInWalletAndReducing(numberOfToSellShares, tickerSoldStock);
+        showTheWalletContent();
+    }
+
+    public void findingTheStockInWalletAndReducing(int numberOfToSellShares, String tickerSoldStock) {
         Boolean enoughFunding = true;
         int counter = 0;
-        int totalNumberOfSharesOfRequestedStockInWallet = 0;
+        int totalRequestedSharesInWallet = 0;
         ArrayList<Integer> indexes = new ArrayList<>();
-        int indexThatProvidesTheLastFunding = 0;
 
         for (PurchasedStock stockInWallet : stocksInWallet.getStocks()) {
-            if (stockInWallet.getStock().getTicker().toLowerCase().equals(tickerSoldStock.toLowerCase())) {
-                if (stockInWallet.getNumber() > numberOfRequestedToSellShares) {
-                    stockInWallet.decreasingTheNumberOfShares(numberOfRequestedToSellShares);
+            if (stockInWallet.getStock().getTicker().equalsIgnoreCase(tickerSoldStock)) {
+                if (stockInWallet.getNumber() > numberOfToSellShares) {
+                    stockInWallet.decreasingTheNumberOfShares(numberOfToSellShares);
                     enoughFunding = false;
                     break;
                 } else {
-                    totalNumberOfSharesOfRequestedStockInWallet += stockInWallet.getNumber();
+                    totalRequestedSharesInWallet += stockInWallet.getNumber();
                     indexes.add(counter);
                 }
             }
             counter++;
         }
         if (enoughFunding) {
-            if (totalNumberOfSharesOfRequestedStockInWallet < numberOfRequestedToSellShares) {
-                System.out.println("insufficient funding. Please try again.");
-                sellingStocks();
-            } else {
-                for (int index: indexes) {
-                    PurchasedStock currentlyChecking = stocksInWallet.getStocks().get(index);
-                    if (currentlyChecking.getNumber() < numberOfRequestedToSellShares) {
-                        numberOfRequestedToSellShares -= currentlyChecking.getNumber();
-                    } else if (currentlyChecking.getNumber() > numberOfRequestedToSellShares) {
-                        currentlyChecking.decreasingTheNumberOfShares(numberOfRequestedToSellShares);
-                        indexThatProvidesTheLastFunding = index;
-                        break;
-                    }
-                }
+            checkingForEnoughFundingAndActingAccordingly(totalRequestedSharesInWallet, numberOfToSellShares, indexes);
+        }
+    }
+
+    public void checkingForEnoughFundingAndActingAccordingly(int totalRequestedSharesInWallet,
+                                                             int numberOfToSellShares, ArrayList<Integer> indexes) {
+
+        if (totalRequestedSharesInWallet < numberOfToSellShares) {
+            handlingInsufficientFund();
+        } else {
+            reducingTheSellingSharesFromDifferentIndexes(indexes, numberOfToSellShares);
+        }
+
+    }
+
+    public void handlingInsufficientFund() {
+        System.out.println("insufficient funding. Please try again.");
+        sellingStocks();
+    }
+
+    public void reducingTheSellingSharesFromDifferentIndexes(ArrayList<Integer> indexes, int numberOfToSellShares) {
+        int indexThatProvidesTheLastFunding = 0;
+        for (int index : indexes) {
+            PurchasedStock currentlyChecking = stocksInWallet.getStocks().get(index);
+            if (currentlyChecking.getNumber() < numberOfToSellShares) {
+                numberOfToSellShares -= currentlyChecking.getNumber();
+            } else if (currentlyChecking.getNumber() > numberOfToSellShares) {
+                currentlyChecking.decreasingTheNumberOfShares(numberOfToSellShares);
+                indexThatProvidesTheLastFunding = index;
+                break;
             }
         }
+        removingSoldStocksFromTheWallet(indexes, indexThatProvidesTheLastFunding);
+    }
+
+    public void removingSoldStocksFromTheWallet(ArrayList<Integer> indexes, int indexThatProvidesTheLastFunding) {
         for (int index : indexes) {
             if (index == indexThatProvidesTheLastFunding) {
                 break;
             }
             stocksInWallet.getStocks().remove(index);
         }
-        showTheWalletContent();
     }
+
 
     // MODIFIES: StocksInWallet
     // EFFECT: adding the wanted stock to their wallet
@@ -151,7 +176,7 @@ public class Investment {
     // EFFECT: showing the wallet content to the user
     public void showTheWalletContent() {
         ArrayList<PurchasedStock> stocks = stocksInWallet.getStocks();
-        for (PurchasedStock stock: stocks) {
+        for (PurchasedStock stock : stocks) {
             System.out.println("You have " + stock.getNumber() + " shares of " + stock.getStock().getTicker());
             System.out.println("with the value of: " + stock.getPrice() * stock.getNumber());
         }
