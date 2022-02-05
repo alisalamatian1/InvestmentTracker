@@ -93,7 +93,8 @@ public class Investment {
 
 
     // MODIFIES: StocksInWallet
-    // EFFECT: adding the wanted stock to their wallet
+    // EFFECT: adding the wanted stock, including its information about number of shares and price to user wallet
+    // and returning the modified stocks in Wallet
     public StocksInWallet buyingStocks(Stock stock, int number, double price) {
         purchasedStock = new PurchasedStock(stock,number,price);
         stocksInWallet.addPurchasedStock(purchasedStock);

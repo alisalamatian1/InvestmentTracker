@@ -79,5 +79,22 @@ public class InvestmentTest {
         assertEquals(1, stocksInWallet.getStocks().size());
     }
 
+    @Test
+    public void buyingStocksTest() {
+        assertEquals(investment.getStocksInWallet(), investment.buyingStocks(stock, 5, 120));
+        assertEquals(stock, investment.getStocksInWallet().getStocks().get(0).getStock());
+        assertEquals(5, investment.getStocksInWallet().getStocks().get(0).getNumber());
+        assertEquals(120, investment.getStocksInWallet().getStocks().get(0).getPrice());
+        assertEquals(1, investment.getStocksInWallet().getStocks().size());
+
+        assertEquals(investment.getStocksInWallet(), investment.buyingStocks(stock, 10, 121));
+        assertEquals(5, investment.getStocksInWallet().getStocks().get(0).getNumber());
+        assertEquals(120, investment.getStocksInWallet().getStocks().get(0).getPrice());
+        assertEquals(stock, investment.getStocksInWallet().getStocks().get(1).getStock());
+        assertEquals(10, investment.getStocksInWallet().getStocks().get(1).getNumber());
+        assertEquals(121, investment.getStocksInWallet().getStocks().get(1).getPrice());
+        assertEquals(2, investment.getStocksInWallet().getStocks().size());
+    }
+
 
 }
