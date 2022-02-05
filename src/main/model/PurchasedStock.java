@@ -5,6 +5,7 @@ public class PurchasedStock {
     private int number;
     private double price;
 
+    // EFFECT: constructing a purchasedStock with the given stock, number of shares, and the price
     public PurchasedStock(Stock stock, int number, double price) {
         this.stock = stock;
         this.number = number;

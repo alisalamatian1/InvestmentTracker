@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class StocksInWallet {
     private ArrayList stocks;
 
+    // EFFECT: constructing a list of purchasedStocks
     public StocksInWallet() {
         this.stocks = new ArrayList<PurchasedStock>();
     }
