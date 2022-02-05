@@ -32,12 +32,6 @@ public class UserProfile {
     public void addNewUser() {
         // Question: how to add the user to a dataBase that updates each time
         // I run the code?
-
-        callingInvestmentPlan();
-    }
-
-    public void callingInvestmentPlan() {
-        new InvestmentPlans();
     }
 
 }

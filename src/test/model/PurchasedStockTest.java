@@ -11,7 +11,7 @@ public class PurchasedStockTest {
     PurchasedStock purchasedStock;
     @BeforeEach
     public void setUp(){
-        investment = new Investment("balanced");
+        investment = new Investment();
         stocksInWallet = new StocksInWallet();
         Stock stock = new Stock("VFV");
         purchasedStock = new PurchasedStock(stock, 10, 111);
