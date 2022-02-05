@@ -61,7 +61,7 @@ public class Investment {
     }
 
     private void reducingTheSellingSharesFromDifferentIndexes(ArrayList<Integer> indexes, int numberOfToSellShares) {
-        int indexThatProvidesTheLastFunding = 0;
+        int indexThatProvidesTheLastFunding = -1;
         for (int index : indexes) {
             PurchasedStock currentlyChecking = stocksInWallet.getStocks().get(index);
             if (currentlyChecking.getNumber() < numberOfToSellShares) {
@@ -81,13 +81,14 @@ public class Investment {
     }
 
     private void removingSoldStocksFromTheWallet(ArrayList<Integer> indexes, int indexThatProvidesTheLastFunding) {
-//        for (int index : indexes) {
-//            if (index == indexThatProvidesTheLastFunding) {
-//                break;
-//            }
-//            stocksInWallet.getStocks().remove(index);
-//        }
-        stocksInWallet.getStocks().removeAll(needToRemove);
+        int counter = 0;
+        for (int index : indexes) {
+            if (index == indexThatProvidesTheLastFunding) {
+                break;
+            }
+            stocksInWallet.getStocks().remove((index - counter));
+            counter++;
+        }
     }
 
 
