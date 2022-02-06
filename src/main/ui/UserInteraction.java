@@ -22,7 +22,7 @@ public class UserInteraction {
 
     // EFFECT: printing the options to login or sign up and call the corresponding method
     private void startingPage() {
-        System.out.println("SignUp(S) or LogIn(L) or Quit(q)?");
+        System.out.println("Sign up(S) or Log in(L) or Quit(q)?");
         String answer = scanner.next();
         if (answer.equalsIgnoreCase("s")) {
             createProfile();
@@ -33,17 +33,19 @@ public class UserInteraction {
         }
     }
 
-    private void logIn() {
-        System.out.println("What is your userName?");
-        String name = scanner.next();
-        String password = "";
-        boolean correctPass = false;
-        while (!correctPass) {
-            password = askUsersPassword();
-            if (password.length() >= 1) {
-                correctPass = true;
-            }
+    private void logInAgainPage() {
+        System.out.println("Log in again(l) or Quit(q)?");
+        String answer = scanner.next();
+        if (answer.equalsIgnoreCase("l")) {
+            logIn();
+        } else {
+            System.out.println("Hope to see you soon!");
         }
+    }
+
+    private void logIn() {
+        String name = askUserName();
+        String password = checkPassword();
         boolean found = false;
         int counter  = 0;
         for (UserProfile key : userProfileAndWallet.getAssociatedWallet().keySet()) {
@@ -55,30 +57,40 @@ public class UserInteraction {
                     stocksInWallet = userProfileAndWallet.getAssociatedWallet().get(key);
                     showTheWalletContent();
                     showActionType();
+                    break;
                 }
             }
             counter++;
         }
         if (!found) {
             System.out.println("Sorry, could not find you in our system!, try again");
-            startingPage();
+            logInAgainPage();
         }
     }
 
     // EFFECT: creating a userProfile containing user's name and password
     public void createProfile() {
-        System.out.println("What is your userName?");
-        String name = scanner.next();
-        String password = "";
-        boolean correctPass = true;
-        while (correctPass) {
-            password = askUsersPassword();
-            if (password.length() >= 1) {
-                correctPass = false;
-            }
-        }
+        String name = askUserName();
+        String password = checkPassword();
         userProfile = new UserProfile(name, password);
         questionnaire();
+    }
+
+    public String askUserName() {
+        System.out.println("What is your userName?");
+        return scanner.next();
+    }
+
+    public String checkPassword() {
+        String password = "";
+        boolean correctPass = false;
+        while (!correctPass) {
+            password = askUsersPassword();
+            if (password.length() >= 1) {
+                correctPass = true;
+            }
+        }
+        return password;
     }
 
     // EFFECT: getting users to input their 8 digit password
@@ -131,10 +143,10 @@ public class UserInteraction {
         } else if (answer.equalsIgnoreCase("s")) {
             sellingStock();
         } else {
-            System.out.println("It was nice serving you, see you soon!");
+            System.out.println("It was nice serving you, see you soon!" + userProfile.getUserName());
             System.out.println("Your wallet content for a last look :)");
             showTheWalletContent();
-            startingPage();
+            logInAgainPage();
         }
     }
 
@@ -204,12 +216,12 @@ public class UserInteraction {
     // EFFECT: selling the wanted stock and updating UserProfileAndWallet accordingly
     public void sellingStock() {
         System.out.println("What stock are you selling? (Enter the ticker)");
-        Stock sellingStock = new Stock(scanner.next());
+        String ticker = scanner.next();
         System.out.println("How many shares are you selling?");
         int numberOfShares = scanner.nextInt();
         System.out.println("At what price you are selling? (please check https://finance.yahoo.com for live prices)");
         double price = scanner.nextDouble();
-        Boolean wasSuccessful = investment.sellingStocks(sellingStock, numberOfShares);
+        Boolean wasSuccessful = investment.sellingStocks(ticker, numberOfShares);
         if (!wasSuccessful) {
             System.out.println("Insufficient funding! Please look at the listed stocks you have and try again!");
             showTheWalletContent();
@@ -228,11 +240,6 @@ public class UserInteraction {
             System.out.println("with the value of: " + stock.getPrice() * stock.getNumber());
         }
     }
-
-//    // EFFECT: creating the userProfileAndWallet and
-//    public void createUserProfileAndWallet() {
-//        userProfileAndWallet = new UserProfileAndWallet(userProfile, stocksInWallet);
-//    }
 
     // EFFECT: changing UserProfileAndWallet when user changes their StocksInWallet
     public void changeUserProfileAndWallet() {

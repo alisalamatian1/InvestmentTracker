@@ -17,9 +17,7 @@ public class Investment {
     // MODIFIES: StocksInWallet
     // EFFECT: Selling the chosen n stocks by removing the first n of the particular stock from the user's wallet and
     // reporting the profit; if not enough funding giving them an error
-    public Boolean sellingStocks(Stock stock, int numberOfToSellShares) {
-        String tickerSoldStock = stock.getTicker();
-
+    public Boolean sellingStocks(String tickerSoldStock, int numberOfToSellShares) {
         return findingTheStockInWalletAndReducing(numberOfToSellShares, tickerSoldStock);
     }
 
