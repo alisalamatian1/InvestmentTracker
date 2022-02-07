@@ -6,19 +6,24 @@ import java.util.*;
 
 
 public class UserInteraction {
-    private final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
     private String typeOfInvestment;
     private Investment investment;
     private List<Stock> balancedStocks;
     private List<Stock> conservativeStocks;
     private List<Stock> riskyStocks;
-    private StocksInWallet stocksInWallet = new StocksInWallet();
+    private StocksInWallet stocksInWallet;
     private UserProfile userProfile;
-    private UserProfileAndWallet userProfileAndWallet = new UserProfileAndWallet(userProfile, stocksInWallet);
+    private UserProfileAndWallet userProfileAndWallet;
 
+    // EFFECT: initializing scanner, stockInWallet and userProfileAndWallet, and calling the starting page
     public UserInteraction() {
+        scanner = new Scanner(System.in);
+        stocksInWallet = new StocksInWallet();
+        userProfileAndWallet = new UserProfileAndWallet(userProfile, stocksInWallet);
         startingPage();
     }
+
 
     // EFFECT: printing the options to login or sign up and call the corresponding method
     private void startingPage() {
@@ -33,6 +38,7 @@ public class UserInteraction {
         }
     }
 
+    // EFFECT: ask the user to login or quit and acts correspondingly
     private void logInAgainPage() {
         System.out.println("Log in again(l) or Quit(q)?");
         String answer = scanner.next();
@@ -43,6 +49,9 @@ public class UserInteraction {
         }
     }
 
+    // MODIFIES: this
+    // EFFECT: asks for username and password, if founded in the system, showing their wallet content,
+    // else heading back to the logInAgain method
     private void logIn() {
         String name = askUserName();
         String password = checkPassword();
@@ -53,6 +62,7 @@ public class UserInteraction {
             if (counter > 0 && key.getUserName().equals(name)) {
                 if (key.getPassword().equals(password)) {
                     found = true;
+                    // the next two lines are not necessary for phase one
                     stocksInWallet = new StocksInWallet();
                     stocksInWallet = userProfileAndWallet.getAssociatedWallet().get(key);
                     showTheWalletContent();
@@ -68,6 +78,7 @@ public class UserInteraction {
         }
     }
 
+    // MODIFIES: this
     // EFFECT: creating a userProfile containing user's name and password
     public void createProfile() {
         String name = askUserName();
@@ -76,17 +87,23 @@ public class UserInteraction {
         questionnaire();
     }
 
+    // REQUIRES: username must be without whitespaces in between
+    // EFFECT: asks for usernames and returns it
     public String askUserName() {
         System.out.println("What is your userName?");
         return scanner.next();
     }
 
+    // REQUIRES: password must be without whitespaces in between
+    // EFFECT: asks for password and checks if it is at least minimumPasswordLength characters (currently at 8)
+    // when password is acceptable, returns it
     public String checkPassword() {
+        int minimumPasswordLength = 1;
         String password = "";
         boolean correctPass = false;
         while (!correctPass) {
             password = askUsersPassword();
-            if (password.length() >= 1) {
+            if (password.length() >= minimumPasswordLength) {
                 correctPass = true;
             }
         }
@@ -99,16 +116,18 @@ public class UserInteraction {
         return scanner.next();
     }
 
-
+    // EFFECT: asking the users about their risk tolerance and calling pickInvestment
     public void questionnaire() {
         System.out.println("how much risk you are willing to take?");
-        System.out.println("Remember that ususally the higher the risk the better chance of bigger reward...");
+        System.out.println("Remember that usually the higher the risk the better chance of bigger reward...");
         System.out.println("\t 1) very little");
         System.out.println("\t 2) moderate");
         System.out.println("\t 3) risky");
         pickInvestment(scanner.next());
     }
 
+    // MODIFIES: this
+    // EFFECT: assigns the type of investment and calls createInvestment
     public void pickInvestment(String choiceNumber) {
         switch (choiceNumber) {
             case "1":
@@ -127,6 +146,8 @@ public class UserInteraction {
         createInvestment();
     }
 
+    // MODIFIES: this
+    // EFFECT: create an investment instance and calls showActionType
     public void createInvestment() {
         System.out.print("You should do a " + typeOfInvestment);
         System.out.println(" investment, that is what our algorithms suggest for you!");
@@ -134,6 +155,7 @@ public class UserInteraction {
         showActionType();
     }
 
+    // EFFECTS: gets users to choose their action and acts accordingly
     public void showActionType() {
         System.out.println("Do you want to buy(B), sell(S), or quit(Q)?");
         String answer = scanner.next();
@@ -165,7 +187,8 @@ public class UserInteraction {
         }
     }
 
-    // Effect: a list of risky stocks
+    // MODIFIES: this
+    // EFFECTS: showing a list of risky stocks
     public void riskyList() {
         riskyStocks = new ArrayList<Stock>();
         riskyStocks.add(new Stock("ProShares Ultra S&P500", "SSO"));
@@ -176,6 +199,8 @@ public class UserInteraction {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: showing a list of conservative stocks
     public void conservativeList() {
         conservativeStocks = new ArrayList<Stock>();
         conservativeStocks.add(new Stock("Vanguard Conservative ETF Portfolio", "VCNS"));
@@ -186,18 +211,19 @@ public class UserInteraction {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: showing a list of balanced stocks
     public void balancedStocksList() {
         balancedStocks = new ArrayList<Stock>();
         balancedStocks.add(new Stock("Vanguard S&P 500 Index ETF", "VFV"));
         balancedStocks.add(new Stock("Vanguard Balanced ETF Portfolio", "VBAL"));
-
         for (Stock stock : balancedStocks) {
             System.out.print(stock.getName() + ", ");
             System.out.println("with the ticker: " + stock.getTicker());
         }
     }
 
-    // MODIFY: UserProfileAndWallet, StocksInWallet
+    // MODIFY: this, UserProfileAndWallet, Investment
     // EFFECT: buying the wanted stock and updating UserProfileAndWallet accordingly
     public void buyingStocks() {
         System.out.println("What is the ticker of the stock you buying?");
@@ -212,7 +238,7 @@ public class UserInteraction {
         showActionType();
     }
 
-    // MODIFY: UserProfileAndWallet, StocksInWallet
+    // MODIFY: UserProfileAndWallet, StocksInWallet, investment
     // EFFECT: selling the wanted stock and updating UserProfileAndWallet accordingly
     public void sellingStock() {
         System.out.println("What stock are you selling? (Enter the ticker)");
@@ -232,7 +258,7 @@ public class UserInteraction {
         showActionType();
     }
 
-    // EFFECT: showing the wallet content to the user
+    // EFFECT: showing the wallet's content to the user
     public void showTheWalletContent() {
         ArrayList<PurchasedStock> stocks = stocksInWallet.getStocks();
         for (PurchasedStock stock : stocks) {
@@ -241,6 +267,7 @@ public class UserInteraction {
         }
     }
 
+    // MODIFIES: UserProfileAndWallet
     // EFFECT: changing UserProfileAndWallet when user changes their StocksInWallet
     public void changeUserProfileAndWallet() {
         userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);

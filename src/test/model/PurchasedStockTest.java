@@ -18,6 +18,21 @@ public class PurchasedStockTest {
     }
 
     @Test
+    public void constructorTest() {
+        PurchasedStock purchasedStockTest = new PurchasedStock(new Stock ("VFV"), 2, 100);
+        assertEquals("VFV", purchasedStockTest.getStock().getTicker());
+        assertEquals(2,purchasedStockTest.getNumber());
+        assertEquals(100, purchasedStockTest.getPrice());
+
+        purchasedStockTest = new PurchasedStock(new Stock ("TESLA"), 3, 200);
+        assertEquals("TESLA", purchasedStockTest.getStock().getTicker());
+        assertEquals(3,purchasedStockTest.getNumber());
+        assertEquals(200, purchasedStockTest.getPrice());
+
+
+    }
+
+    @Test
     public void decreasingNumberOfSharesTest() {
         purchasedStock.decreasingTheNumberOfShares(2);
         assertEquals(8, purchasedStock.getNumber());
