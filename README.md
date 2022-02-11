@@ -14,8 +14,9 @@ I like the finance world, especially stock market and usually try to think a hea
 I hope it app help others to grow interest about finance and seek to educate themselves about money.
 
 ### As a user I want to:
-- choose an investment plan based on my current situation
+- Make a profile
+- get an investment suggestion based on my risk toleration
 - Simulating buying stocks, adding stocks to my profile
 - Simulating selling stocks, removing stocks from my profile
-- see the **overall wallet value** of my money
+- Being able to logBack
  

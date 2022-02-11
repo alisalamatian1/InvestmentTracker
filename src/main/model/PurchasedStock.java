@@ -12,7 +12,7 @@ public class PurchasedStock {
         this.price = price;
     }
 
-    // REQUIRES: number > amount, amount > 0
+    // REQUIRES: number >= amount, amount > 0
     // MODIFIES: this
     // EFFECT: decreasing the number of shares by the given amount
     public void decreasingTheNumberOfShares(int amount) {
@@ -29,9 +29,5 @@ public class PurchasedStock {
 
     public Stock getStock() {
         return stock;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
     }
 }

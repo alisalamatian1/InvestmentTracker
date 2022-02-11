@@ -7,12 +7,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PurchasedStockTest {
     Investment investment;
-    StocksInWallet stocksInWallet;
+    StocksInWalletTest stocksInWallet;
     PurchasedStock purchasedStock;
     @BeforeEach
     public void setUp(){
         investment = new Investment();
-        stocksInWallet = new StocksInWallet();
+        stocksInWallet = new StocksInWalletTest();
         Stock stock = new Stock("VFV");
         purchasedStock = new PurchasedStock(stock, 10, 111);
     }
@@ -38,5 +38,7 @@ public class PurchasedStockTest {
         assertEquals(8, purchasedStock.getNumber());
         purchasedStock.decreasingTheNumberOfShares(3);
         assertEquals(5, purchasedStock.getNumber());
+        purchasedStock.decreasingTheNumberOfShares(4);
+        assertEquals(1, purchasedStock.getNumber());
     }
 }
