@@ -2,7 +2,7 @@ package model;
 
 import ui.UserInteraction;
 
-
+// This class represents user's profile; their userName and password
 public class UserProfile {
     private String userName;
     private String password;

@@ -1,5 +1,6 @@
 package model;
 
+// This class has the information about the purchased stocks
 public class PurchasedStock {
     private Stock stock;
     private int number;

@@ -4,7 +4,7 @@ package model;
 import java.util.ArrayList;
 
 
-// In this class users actually do the investment
+// This class provides functionality to buy and sell stocks
 public class Investment {
     private PurchasedStock purchasedStock;
     private StocksInWallet stocksInWallet = new StocksInWallet();
@@ -14,13 +14,15 @@ public class Investment {
     public Investment() {
     }
 
-    // MODIFIES: StocksInWallet
+    // REQUIRES: numberOfToSellShares > 0, tickerSoldStock cannot be empty
+    // MODIFIES: this
     // EFFECT: Selling the chosen n stocks by removing the first n of the particular stock from the user's wallet and
     // reporting the profit; if not enough funding giving them an error
     public Boolean sellingStocks(String tickerSoldStock, int numberOfToSellShares) {
         return findingTheStockInWalletAndReducing(numberOfToSellShares, tickerSoldStock);
     }
 
+    // EFFECT: finding the stocks in the wallet and reducing the number of owned shares by the wanted amount
     private Boolean findingTheStockInWalletAndReducing(int numberOfToSellShares, String tickerSoldStock) {
         Boolean enoughFunding = true;
         int counter = 0;
@@ -47,6 +49,8 @@ public class Investment {
         return true;
     }
 
+    // EFFECT: checking if the user has enough of the stock that they are selling in their account
+    // reducing the number if they had and returning true, returning false otherwise
     private Boolean checkingForEnoughFundingAndActingAccordingly(int totalRequestedSharesInWallet,
                                                              int numberOfToSellShares, ArrayList<Integer> indexes) {
 
@@ -58,6 +62,9 @@ public class Investment {
         return true;
     }
 
+    // MODIFIES: this
+    // EFFECT: going through the indexes that have the wanted stock and removing them
+    // till we reach the numberOfToSell shares
     private void reducingTheSellingSharesFromDifferentIndexes(ArrayList<Integer> indexes, int numberOfToSellShares) {
         int indexThatProvidesTheLastFunding = -1;
         for (int index : indexes) {
@@ -78,6 +85,8 @@ public class Investment {
         removingSoldStocksFromTheWallet(indexes, indexThatProvidesTheLastFunding);
     }
 
+    // MODIFIES: this
+    // EFFECT: removing the sold shares from stockInWallet
     private void removingSoldStocksFromTheWallet(ArrayList<Integer> indexes, int indexThatProvidesTheLastFunding) {
         int counter = 0;
         for (int index : indexes) {
@@ -89,8 +98,8 @@ public class Investment {
         }
     }
 
-
-    // MODIFIES: StocksInWallet
+    // REQUIRES: number > 0, price > 0
+    // MODIFIES: this
     // EFFECT: adding the wanted stock, including its information about number of shares and price to user wallet
     // and returning the modified stocks in Wallet
     public StocksInWallet buyingStocks(Stock stock, int number, double price) {

@@ -4,7 +4,8 @@ import model.*;
 
 import java.util.*;
 
-
+// This is the class that users can input their trading requests;
+// it makes instances of classes in the method package and calls the appropriate methods
 public class UserInteraction {
     private final Scanner scanner;
     private String typeOfInvestment;
@@ -15,6 +16,7 @@ public class UserInteraction {
     private StocksInWallet stocksInWallet;
     private UserProfile userProfile;
     private UserProfileAndWallet userProfileAndWallet;
+    private boolean isSignedUp = false;
 
     // EFFECT: initializing scanner, stockInWallet and userProfileAndWallet, and calling the starting page
     public UserInteraction() {
@@ -24,8 +26,8 @@ public class UserInteraction {
         startingPage();
     }
 
-
-    // EFFECT: printing the options to login or sign up and call the corresponding method
+    // MODIFIES: this
+    // EFFECT: printing the options to log in or sign up and call the corresponding method
     private void startingPage() {
         System.out.println("Sign up(S) or Log in(L) or Quit(q)?");
         String answer = scanner.next();
@@ -38,6 +40,7 @@ public class UserInteraction {
         }
     }
 
+    // MODIFIES: this
     // EFFECT: ask the user to login or quit and acts correspondingly
     private void logInAgainPage() {
         System.out.println("Log in again(l) or Quit(q)?");
@@ -46,12 +49,13 @@ public class UserInteraction {
             logIn();
         } else {
             System.out.println("Hope to see you soon!");
+            System.exit(0);
         }
     }
 
     // MODIFIES: this
     // EFFECT: asks for username and password, if founded in the system, showing their wallet content,
-    // else heading back to the logInAgain method
+    // else heading back to the logInAgain or startingPage method
     private void logIn() {
         String name = askUserName();
         String password = checkPassword();
@@ -72,9 +76,19 @@ public class UserInteraction {
             }
             counter++;
         }
+        navigateUserNotFound(found);
+    }
+
+    // MODIFIES: this
+    // EFFECT: handling the page to show depending on whether user is signed up or not
+    private void navigateUserNotFound(boolean found) {
         if (!found) {
             System.out.println("Sorry, could not find you in our system!, try again");
-            logInAgainPage();
+            if (isSignedUp) {
+                logInAgainPage();
+            } else {
+                startingPage();
+            }
         }
     }
 
@@ -84,11 +98,13 @@ public class UserInteraction {
         String name = askUserName();
         String password = checkPassword();
         userProfile = new UserProfile(name, password);
+        isSignedUp = true;
+        changeUserProfileAndWallet();
         questionnaire();
     }
 
     // REQUIRES: username must be without whitespaces in between
-    // EFFECT: asks for usernames and returns it
+    // EFFECT: asks for username and returns it
     public String askUserName() {
         System.out.println("What is your userName?");
         return scanner.next();
@@ -97,8 +113,8 @@ public class UserInteraction {
     // REQUIRES: password must be without whitespaces in between
     // EFFECT: asks for password and checks if it is at least minimumPasswordLength characters (currently at 8)
     // when password is acceptable, returns it
-    public String checkPassword() {
-        int minimumPasswordLength = 1;
+    private String checkPassword() {
+        int minimumPasswordLength = 8;
         String password = "";
         boolean correctPass = false;
         while (!correctPass) {
@@ -111,13 +127,14 @@ public class UserInteraction {
     }
 
     // EFFECT: getting users to input their 8 digit password
-    public String askUsersPassword() {
+    private String askUsersPassword() {
         System.out.println("What is your password (at least 8 characters or digits)?");
         return scanner.next();
     }
 
+    // MODIFIES: this
     // EFFECT: asking the users about their risk tolerance and calling pickInvestment
-    public void questionnaire() {
+    private void questionnaire() {
         System.out.println("how much risk you are willing to take?");
         System.out.println("Remember that usually the higher the risk the better chance of bigger reward...");
         System.out.println("\t 1) very little");
@@ -128,7 +145,7 @@ public class UserInteraction {
 
     // MODIFIES: this
     // EFFECT: assigns the type of investment and calls createInvestment
-    public void pickInvestment(String choiceNumber) {
+    private void pickInvestment(String choiceNumber) {
         switch (choiceNumber) {
             case "1":
                 typeOfInvestment = "conservative";
@@ -155,6 +172,7 @@ public class UserInteraction {
         showActionType();
     }
 
+    // MODIFIES: this
     // EFFECTS: gets users to choose their action and acts accordingly
     public void showActionType() {
         System.out.println("Do you want to buy(B), sell(S), or quit(Q)?");
@@ -223,8 +241,8 @@ public class UserInteraction {
         }
     }
 
-    // MODIFY: this, UserProfileAndWallet, Investment
-    // EFFECT: buying the wanted stock and updating UserProfileAndWallet accordingly
+    // MODIFY: this
+    // EFFECT: adding the wanted stock to the stocksInWallet and updating userProfileAndWallet field accordingly
     public void buyingStocks() {
         System.out.println("What is the ticker of the stock you buying?");
         Stock purchasingStock = new Stock(scanner.next());
@@ -238,8 +256,9 @@ public class UserInteraction {
         showActionType();
     }
 
-    // MODIFY: UserProfileAndWallet, StocksInWallet, investment
-    // EFFECT: selling the wanted stock and updating UserProfileAndWallet accordingly
+    // MODIFY: this
+    // EFFECT: selling the wanted stock, removing it from stocksInWallet
+    // and updating userProfileAndWallet field accordingly
     public void sellingStock() {
         System.out.println("What stock are you selling? (Enter the ticker)");
         String ticker = scanner.next();
@@ -267,10 +286,9 @@ public class UserInteraction {
         }
     }
 
-    // MODIFIES: UserProfileAndWallet
-    // EFFECT: changing UserProfileAndWallet when user changes their StocksInWallet
+    // MODIFIES: this
+    // EFFECT: changing userProfileAndWallet when user changes their StocksInWallet
     public void changeUserProfileAndWallet() {
         userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);
     }
-
 }

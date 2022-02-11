@@ -2,6 +2,7 @@ package model;
 
 import java.util.HashMap;
 
+// This class is for holding wallet of each profile and linking the two
 public class UserProfileAndWallet {
     private HashMap<UserProfile, StocksInWallet> associatedWallet = new HashMap<>();
 
@@ -10,11 +11,13 @@ public class UserProfileAndWallet {
         associatedWallet.put(profile,stocks);
     }
 
-    public HashMap<UserProfile, StocksInWallet> getAssociatedWallet() {
-        return associatedWallet;
-    }
-
+    // MODIFY: this
+    // EFFECT: adding the given user profile and stocks to the list of associated wallets
     public void addAssociatedWallets(UserProfile profile, StocksInWallet stocks) {
         associatedWallet.put(profile,stocks);
+    }
+
+    public HashMap<UserProfile, StocksInWallet> getAssociatedWallet() {
+        return associatedWallet;
     }
 }

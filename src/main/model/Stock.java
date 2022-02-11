@@ -1,5 +1,6 @@
 package model;
 
+// This class represents a stock that has name and ticker
 public class Stock {
     private String name;
     private String ticker;
