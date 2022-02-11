@@ -3,7 +3,7 @@
 ## 💹 What it does?
 
 - It gives users investment options to pick and enables them to keep track of how their money is growing over time
-- I hope this app help others to grow interest about finance and seek to educate themselves about money.
+- I hope this app helps others to grow interest about finance and seek to educate themselves about money.
 
 More specifically: <br />
 By the end of the phase 4, a user can sign up or if they already have an account log in to the app. 
@@ -22,9 +22,10 @@ Lastly, I want to make a line graph of the users stock growth over time to enhan
 
 ## 💸 Why is this project of interest to you?
 
-- I like the finance world, especially stock market and usually try to think a head in terms of my financial plans.
+- I like the finance world, especially stock market and usually try to think a head in terms of my financial plans. 
+But what if an app can help us to keep track of our investment?
 - I have used many finance apps to purchase stocks and always wanted to implement one myself
-- Handling users and their information is appealing to me!
+- Handling users' information is appealing to me!
 
 ### As a user I want to:
 - Make a profile

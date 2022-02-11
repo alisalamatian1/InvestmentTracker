@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Test for the PurchasedStock class
 public class PurchasedStockTest {
     Investment investment;
     StocksInWalletTest stocksInWallet;

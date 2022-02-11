@@ -183,7 +183,7 @@ public class UserInteraction {
         } else if (answer.equalsIgnoreCase("s")) {
             sellingStock();
         } else {
-            System.out.println("It was nice serving you, see you soon!" + userProfile.getUserName());
+            System.out.println("It was nice serving you, see you soon! " + userProfile.getUserName());
             System.out.println("Your wallet content for a last look :)");
             showTheWalletContent();
             logInAgainPage();

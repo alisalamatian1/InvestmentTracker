@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+// Test for the UserProfileAndWallet class
 public class UserProfileAndWalletTest {
     UserProfileAndWallet userProfileAndWallet;
     UserProfile userProfile;

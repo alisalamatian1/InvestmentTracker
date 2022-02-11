@@ -2,9 +2,9 @@ package model;
 
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+// Test for the UserProfile class
 public class UserProfileTest {
     @Test
     public void userProfileConstructorTest() {

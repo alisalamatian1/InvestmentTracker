@@ -11,13 +11,13 @@ public class StocksInWallet {
         this.stocks = new ArrayList<PurchasedStock>();
     }
 
-    public ArrayList<PurchasedStock> getStocks() {
-        return stocks;
-    }
-
     // MODIFIES: this
     // EFFECT: adds a stock to the wallet
     public void addPurchasedStock(PurchasedStock stock) {
         stocks.add(stock);
+    }
+
+    public ArrayList<PurchasedStock> getStocks() {
+        return stocks;
     }
 }

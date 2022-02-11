@@ -3,10 +3,10 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+// Test for the StocksInWallet class
 public class StocksInWalletTest {
     StocksInWallet stocksInWallet;
     @BeforeEach
