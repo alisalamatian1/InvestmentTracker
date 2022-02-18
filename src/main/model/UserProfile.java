@@ -1,5 +1,6 @@
 package model;
 
+import org.json.JSONObject;
 import ui.UserInteraction;
 
 // This class represents user's profile; their userName and password
@@ -19,5 +20,12 @@ public class UserProfile {
 
     public String getUserName() {
         return userName;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("username", userName);
+        json.put("password", password);
+        return json;
     }
 }

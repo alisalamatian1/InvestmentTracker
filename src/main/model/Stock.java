@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 // This class represents a stock that has name and ticker
 public class Stock {
     private String name;
@@ -23,5 +25,12 @@ public class Stock {
 
     public String getTicker() {
         return ticker;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("ticker", ticker);
+        return json;
     }
 }

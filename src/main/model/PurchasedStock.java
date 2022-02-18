@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 // This class has the information about the purchased stocks
 public class PurchasedStock {
     private Stock stock;
@@ -30,5 +32,13 @@ public class PurchasedStock {
 
     public Stock getStock() {
         return stock;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("Stock", stock.toJson());
+        json.put("number", number);
+        json.put("price", price);
+        return json;
     }
 }

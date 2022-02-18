@@ -1,13 +1,16 @@
 package ui;
 
 import model.*;
+import persistence.JsonWriting;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 // This is the class that users can input their trading requests;
 // it makes instances of classes in the method package and calls the appropriate methods
 public class UserInteraction {
     private final Scanner scanner;
+    private static final String JSON_STORAGE = "./data/userProfileAndWallet.json";
     private String typeOfInvestment;
     private Investment investment;
     private List<Stock> balancedStocks;
@@ -17,12 +20,15 @@ public class UserInteraction {
     private UserProfile userProfile;
     private UserProfileAndWallet userProfileAndWallet;
     private boolean isSignedUp = false;
+    private JsonWriting jsonWriting;
+    private int isSetUpCounter = 0;
 
     // EFFECT: initializing scanner, stockInWallet and userProfileAndWallet, and calling the starting page
     public UserInteraction() {
         scanner = new Scanner(System.in);
         stocksInWallet = new StocksInWallet();
         userProfileAndWallet = new UserProfileAndWallet(userProfile, stocksInWallet);
+        jsonWriting = new JsonWriting(JSON_STORAGE);
         startingPage();
     }
 
@@ -183,6 +189,14 @@ public class UserInteraction {
         } else if (answer.equalsIgnoreCase("s")) {
             sellingStock();
         } else {
+            System.out.println("do you want to save your data?(y/n)");
+            if (scanner.next().equals("y")) {
+                try {
+                    saveUserInfo();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
             System.out.println("It was nice serving you, see you soon! " + userProfile.getUserName());
             System.out.println("Your wallet content for a last look :)");
             showTheWalletContent();
@@ -279,7 +293,7 @@ public class UserInteraction {
 
     // EFFECT: showing the wallet's content to the user
     public void showTheWalletContent() {
-        ArrayList<PurchasedStock> stocks = stocksInWallet.getStocks();
+        List<PurchasedStock> stocks = stocksInWallet.getStocks();
         for (PurchasedStock stock : stocks) {
             System.out.println("You have " + stock.getNumber() + " shares of " + stock.getStock().getTicker());
             System.out.println("with the value of: " + stock.getPrice() * stock.getNumber());
@@ -290,5 +304,12 @@ public class UserInteraction {
     // EFFECT: changing userProfileAndWallet when user changes their StocksInWallet
     public void changeUserProfileAndWallet() {
         userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);
+    }
+
+    // EFFECT: saving the userProfileAndWallet to the file
+    public void saveUserInfo() throws FileNotFoundException {
+        jsonWriting.open();
+        jsonWriting.write(userProfileAndWallet);
+        jsonWriting.close();
     }
 }

@@ -1,10 +1,13 @@
 package model;
 
+import java.util.List;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 // This class represents the user's wallet and is for holding all the purchased stocks in one place
 public class StocksInWallet {
-    private ArrayList stocks;
+    private List<PurchasedStock> stocks;
 
     // EFFECT: constructing a list of purchasedStocks and initializing stocks as a new ArrayList
     public StocksInWallet() {
@@ -17,7 +20,15 @@ public class StocksInWallet {
         stocks.add(stock);
     }
 
-    public ArrayList<PurchasedStock> getStocks() {
+    public List<PurchasedStock> getStocks() {
         return stocks;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        for (PurchasedStock stock : stocks) {
+            json.put("PurchaseStock", stock.toJson());
+        }
+        return json;
     }
 }
