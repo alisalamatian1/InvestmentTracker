@@ -35,4 +35,6 @@ But what if an app can help us to keep track of our investment?
 - Being able to log back in
 - Make sure that anyone who does not have my password cannot log in to my account
 - See my wallet content after making any transactions
+- Save my username, password and content of my wallet 
+- Reload my wallet content, including the stocks I own and their corresponding value
  
