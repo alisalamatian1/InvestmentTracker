@@ -33,15 +33,14 @@ public class UserProfileAndWallet {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("profile", profile.toJson());
-        json.put("wallet", wallet);
+        json.put("wallet", wallet.toJson());
         return json;
     }
 
     // EFFECTS: returns things in this workroom as a JSON array
-    private JSONObject userProfileAndWalletToJson() {
-        JSONObject json = new JSONObject();
-        json.put("profile", profile.toJson());
-        json.put("wallet", wallet.toJson());
-        return json;
+    public JSONArray toArrayOfJson() {
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(toJson());
+        return jsonArray;
     }
 }
