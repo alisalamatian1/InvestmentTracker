@@ -43,4 +43,10 @@ public class UserProfileAndWallet {
         jsonArray.put(toJson());
         return jsonArray;
     }
+
+    public JSONObject toJsonObject() {
+        JSONObject json = new JSONObject();
+        json.put("userProfileAndWallets", toArrayOfJson());
+        return json;
+    }
 }

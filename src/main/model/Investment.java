@@ -1,6 +1,8 @@
 package model;
 
 
+import model.exceptions.NegativeShareSellingException;
+
 import java.util.ArrayList;
 
 
@@ -14,11 +16,14 @@ public class Investment {
     public Investment() {
     }
 
-    // REQUIRES: numberOfToSellShares > 0, tickerSoldStock cannot be empty
     // MODIFIES: this
     // EFFECT: Selling the chosen n stocks by removing the first n of the particular stock from the user's wallet and
     // reporting the profit; if not enough funding giving them an error
-    public Boolean sellingStocks(String tickerSoldStock, int numberOfToSellShares) {
+    public Boolean sellingStocks(String tickerSoldStock, int numberOfToSellShares)
+            throws NegativeShareSellingException {
+        if (numberOfToSellShares <= 0) {
+            throw new NegativeShareSellingException();
+        }
         return findingTheStockInWalletAndReducing(numberOfToSellShares, tickerSoldStock);
     }
 

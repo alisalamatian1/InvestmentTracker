@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.NegativeShareSellingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ public class InvestmentTest {
     }
 
     @Test
-    public void sellingStocksWithSufficientFundingNotRemovingTest() {
+    public void sellingStocksWithSufficientFundingNotRemovingTest() throws NegativeShareSellingException {
         stocksInWallet = investment.getStocksInWallet();
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,100)));
         assertTrue (investment.sellingStocks(ticker, 2));
@@ -35,7 +36,7 @@ public class InvestmentTest {
     }
 
     @Test
-    public void sellingStocksWithSufficientFundingRemovingTest() {
+    public void sellingStocksWithSufficientFundingRemovingTest() throws NegativeShareSellingException {
         stocksInWallet = investment.getStocksInWallet();
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,100)));
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,100)));
@@ -69,7 +70,7 @@ public class InvestmentTest {
     }
 
     @Test
-    public void sellingStocksWithInsufficientFundingTest() {
+    public void sellingStocksWithInsufficientFundingTest() throws NegativeShareSellingException {
         stocksInWallet = investment.getStocksInWallet();
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,100)));
         assertFalse (investment.sellingStocks(ticker, 12));

@@ -29,7 +29,8 @@ public class JsonWriting {
     // MODIFIES: this
     // EFFECTS: writes JSON representation of workroom to file
     public void write(UserProfileAndWallet userProfileAndWallet) {
-        JSONArray json = userProfileAndWallet.toArrayOfJson();
+        //JSONArray json = userProfileAndWallet.toArrayOfJson();
+        JSONObject json = userProfileAndWallet.toJsonObject();
         saveToFile(json.toString(TAB));
     }
 

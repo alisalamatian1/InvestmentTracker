@@ -1,6 +1,7 @@
 package ui;
 
 import model.*;
+import model.exceptions.NegativeShareSellingException;
 import persistence.JsonWriting;
 
 import java.io.FileNotFoundException;
@@ -280,7 +281,13 @@ public class UserInteraction {
         int numberOfShares = scanner.nextInt();
         System.out.println("At what price you are selling? (please check https://finance.yahoo.com for live prices)");
         double price = scanner.nextDouble();
-        Boolean wasSuccessful = investment.sellingStocks(ticker, numberOfShares);
+        Boolean wasSuccessful = null;
+        try {
+            wasSuccessful = investment.sellingStocks(ticker, numberOfShares);
+        } catch (NegativeShareSellingException e) {
+            System.out.println("please enter positive number of shares only.");
+            sellingStock();
+        }
         if (!wasSuccessful) {
             System.out.println("Insufficient funding! Please look at the listed stocks you have and try again!");
             showTheWalletContent();
