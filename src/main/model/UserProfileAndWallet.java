@@ -37,16 +37,9 @@ public class UserProfileAndWallet {
         return json;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
-    public JSONArray toArrayOfJson() {
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(toJson());
-        return jsonArray;
-    }
-
     public JSONObject toJsonObject() {
         JSONObject json = new JSONObject();
-        json.put("userProfileAndWallets", toArrayOfJson());
+        json.put("userProfileAndWallets", toJson());
         return json;
     }
 }

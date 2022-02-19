@@ -11,7 +11,7 @@ import java.util.*;
 // it makes instances of classes in the method package and calls the appropriate methods
 public class UserInteraction {
     private final Scanner scanner;
-    private static final String JSON_STORAGE = "./data/userProfileAndWallet.json";
+    private static final String JSON_STORAGE = "./data/";
     private String typeOfInvestment;
     private Investment investment;
     private List<Stock> balancedStocks;
@@ -29,7 +29,6 @@ public class UserInteraction {
         scanner = new Scanner(System.in);
         stocksInWallet = new StocksInWallet();
         userProfileAndWallet = new UserProfileAndWallet(userProfile, stocksInWallet);
-        jsonWriting = new JsonWriting(JSON_STORAGE);
         startingPage();
     }
 
@@ -315,6 +314,7 @@ public class UserInteraction {
 
     // EFFECT: saving the userProfileAndWallet to the file
     public void saveUserInfo() throws FileNotFoundException {
+        jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userProfile.getUserName() + ".json");
         jsonWriting.open();
         jsonWriting.write(userProfileAndWallet);
         jsonWriting.close();

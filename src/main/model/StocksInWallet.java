@@ -26,8 +26,8 @@ public class StocksInWallet {
 
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        for (PurchasedStock stock : stocks) {
-            json.put("PurchaseStock", stock.toJson());
+        for (PurchasedStock purchasedStock : stocks) {
+            json.put("PurchaseStock", purchasedStock.toJson());
         }
         return json;
     }
