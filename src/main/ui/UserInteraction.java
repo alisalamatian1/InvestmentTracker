@@ -2,9 +2,11 @@ package ui;
 
 import model.*;
 import model.exceptions.NegativeShareSellingException;
+import persistence.JsonReading;
 import persistence.JsonWriting;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 // This is the class that users can input their trading requests;
@@ -23,6 +25,7 @@ public class UserInteraction {
     private boolean isSignedUp = false;
     private JsonWriting jsonWriting;
     private int isSetUpCounter = 0;
+    private JsonReading jsonReading;
 
     // EFFECT: initializing scanner, stockInWallet and userProfileAndWallet, and calling the starting page
     public UserInteraction() {
@@ -106,6 +109,7 @@ public class UserInteraction {
         userProfile = new UserProfile(name, password);
         isSignedUp = true;
         changeUserProfileAndWallet();
+        loadData();
         questionnaire();
     }
 
@@ -137,6 +141,9 @@ public class UserInteraction {
         System.out.println("What is your password (at least 8 characters or digits)?");
         return scanner.next();
     }
+
+
+
 
     // MODIFIES: this
     // EFFECT: asking the users about their risk tolerance and calling pickInvestment
@@ -318,5 +325,19 @@ public class UserInteraction {
         jsonWriting.open();
         jsonWriting.write(userProfileAndWallet);
         jsonWriting.close();
+    }
+
+    //MODIFY: this
+    //EFFECTS: reading the stored file
+    public void loadData() {
+        System.out.println("Do you want to load your data?(y/n)");
+        if (scanner.next().equals("y")) {
+            jsonReading = new JsonReading(JSON_STORAGE + "/" + userProfile.getUserName() + ".json");
+            try {
+                userProfileAndWallet = jsonReading.read();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -24,19 +24,5 @@ public class JsonWritingTest {
         } catch (FileNotFoundException e) {
             fail("Something is totally off");
         }
-
-        JsonWriting json2 = new JsonWriting("./data/testingWriteMethod.json");
-        UserProfile userProfile2 = new UserProfile("a", "123");
-        StocksInWallet stocksInWallet2 = new StocksInWallet();
-        stocksInWallet.addPurchasedStock(new PurchasedStock(new Stock("tesla"), 1, 100));
-        UserProfileAndWallet userProfileAndWallet2 = new UserProfileAndWallet(userProfile, stocksInWallet);
-
-        try {
-            json2.open();
-            json2.write(userProfileAndWallet2);
-            json2.close();
-        } catch (FileNotFoundException e) {
-            fail("Something is totally off");
-        }
     }
 }
