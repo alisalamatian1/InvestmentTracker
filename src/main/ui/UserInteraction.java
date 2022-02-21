@@ -31,6 +31,7 @@ public class UserInteraction {
     public UserInteraction() {
         scanner = new Scanner(System.in);
         stocksInWallet = new StocksInWallet();
+        investment = new Investment();
         userProfileAndWallet = new UserProfileAndWallet(userProfile, stocksInWallet);
         startingPage();
     }
@@ -75,9 +76,6 @@ public class UserInteraction {
             if (counter > 0 && key.getUserName().equals(name)) {
                 if (key.getPassword().equals(password)) {
                     found = true;
-                    // the next two lines are not necessary for phase one
-                    stocksInWallet = new StocksInWallet();
-                    stocksInWallet = userProfileAndWallet.getAssociatedWallet().get(key);
                     showTheWalletContent();
                     showActionType();
                     break;
@@ -181,7 +179,6 @@ public class UserInteraction {
     public void createInvestment() {
         System.out.print("You should do a " + typeOfInvestment);
         System.out.println(" investment, that is what our algorithms suggest for you!");
-        investment = new Investment();
         showActionType();
     }
 
@@ -271,6 +268,7 @@ public class UserInteraction {
         int numberOfShares = scanner.nextInt();
         System.out.println("At what price you are buying? (please check https://finance.yahoo.com for live prices)");
         double price = scanner.nextDouble();
+        investment.setStocksInWallet(stocksInWallet);
         stocksInWallet = investment.buyingStocks(purchasingStock, numberOfShares, price);
         showTheWalletContent();
         changeUserProfileAndWallet();
@@ -336,6 +334,7 @@ public class UserInteraction {
             try {
                 userProfileAndWallet = jsonReading.read();
                 stocksInWallet = userProfileAndWallet.getWallet();
+                investment.setStocksInWallet(stocksInWallet);
                 showTheWalletContent();
             } catch (IOException e) {
                 e.printStackTrace();

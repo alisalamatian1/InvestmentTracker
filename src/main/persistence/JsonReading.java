@@ -4,9 +4,11 @@ import model.*;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -42,17 +44,19 @@ public class JsonReading {
     }
 
     private UserProfileAndWallet parseUserProfileAndWallet() {
-        String number = matchFinder("number\":([0-9]+)");
-        String price = matchFinder("price\":([0-9]+)");
-        String ticker = matchFinder("ticker\":\"([a-zA-Z]*)");
         String password = matchFinder("password\":\"([0-9]*)");
         String username = matchFinder("username\":\"([a-zA-Z]*)");
+        ArrayList<String> tickers = matchFinderArray("ticker\":\"([a-zA-Z]*)");
+        ArrayList<String> numbers = matchFinderArray("number\":([0-9]+)");
+        ArrayList<String> prices = matchFinderArray("price\":([0-9]+)");
 
         UserProfile profile = new UserProfile(username, password);
         StocksInWallet stocksInWallet = new StocksInWallet();
-        stocksInWallet.addPurchasedStock(new PurchasedStock(new Stock(ticker),
-                Integer.parseInt(number), Double.parseDouble(price)));
-        return new UserProfileAndWallet(profile,stocksInWallet);
+        for (int i = 0; i < tickers.size(); i++) {
+            stocksInWallet.addPurchasedStock(new PurchasedStock(new Stock(tickers.get(i)),
+                    Integer.parseInt(numbers.get(i)), Double.parseDouble(prices.get(i))));
+        }
+        return new UserProfileAndWallet(profile, stocksInWallet);
     }
 
     // REQUIRES: regex must have at least one group
@@ -65,5 +69,17 @@ public class JsonReading {
             value = matcher.group(1);
         }
         return value;
+    }
+
+    // REQUIRES: regex must have at least one group
+    private ArrayList<String> matchFinderArray(String regex) {
+        String key = "userProfileAndWallets";
+        ArrayList<String> values = new ArrayList<>();
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(json.get(key).toString());
+        while (matcher.find()) {
+            values.add(matcher.group(1));
+        }
+        return values;
     }
 }

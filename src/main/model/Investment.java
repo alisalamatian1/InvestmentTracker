@@ -116,4 +116,8 @@ public class Investment {
     public StocksInWallet getStocksInWallet() {
         return stocksInWallet;
     }
+
+    public void setStocksInWallet(StocksInWallet stocksInWallet) {
+        this.stocksInWallet = stocksInWallet;
+    }
 }

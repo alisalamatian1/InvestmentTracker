@@ -1,6 +1,8 @@
 package model;
 
 import java.util.List;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -24,10 +26,10 @@ public class StocksInWallet {
         return stocks;
     }
 
-    public JSONObject toJson() {
-        JSONObject json = new JSONObject();
+    public JSONArray toJson() {
+        JSONArray json = new JSONArray();
         for (PurchasedStock purchasedStock : stocks) {
-            json.put("PurchaseStock", purchasedStock.toJson());
+            json.put(purchasedStock.toJson());
         }
         return json;
     }
