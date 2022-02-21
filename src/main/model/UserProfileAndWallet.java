@@ -30,6 +30,10 @@ public class UserProfileAndWallet {
         return associatedWallet;
     }
 
+    public StocksInWallet getWallet() {
+        return wallet;
+    }
+
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("profile", profile.toJson());

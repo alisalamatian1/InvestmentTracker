@@ -335,6 +335,8 @@ public class UserInteraction {
             jsonReading = new JsonReading(JSON_STORAGE + "/" + userProfile.getUserName() + ".json");
             try {
                 userProfileAndWallet = jsonReading.read();
+                stocksInWallet = userProfileAndWallet.getWallet();
+                showTheWalletContent();
             } catch (IOException e) {
                 e.printStackTrace();
             }

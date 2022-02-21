@@ -1,8 +1,6 @@
 package persistence;
 
-import model.StocksInWallet;
-import model.UserProfile;
-import model.UserProfileAndWallet;
+import model.*;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -15,7 +13,8 @@ import java.util.stream.Stream;
 
 
 public class JsonReading {
-    private String source;
+    private final String source;
+    private JSONObject json;
 
     // EFFECTS: constructs reader to read from source file
     public JsonReading(String source) {
@@ -26,8 +25,8 @@ public class JsonReading {
     // throws IOException if an error occurs reading data from file
     public UserProfileAndWallet read() throws IOException {
         String jsonData = readFile(source);
-        JSONObject json = new JSONObject(jsonData);
-        return parseUserProfileAndWallet(json);
+        json = new JSONObject(jsonData);
+        return parseUserProfileAndWallet();
     }
 
 
@@ -42,66 +41,29 @@ public class JsonReading {
         return contentBuilder.toString();
     }
 
-    private UserProfileAndWallet parseUserProfileAndWallet(JSONObject json) {
-        String key = "userProfileAndWallets";
-        String stringfiedJson = json.toString();
-        System.out.println(stringfiedJson);
-        System.out.println(json.keySet().toString());
-        System.out.println(json.get(key));
-        String[] array = json.get(key).toString().split(",");
-        String number = array[0].split("number\":")[1];
-        String price = array[1].split(":")[1];
+    private UserProfileAndWallet parseUserProfileAndWallet() {
+        String number = matchFinder("number\":([0-9]+)");
+        String price = matchFinder("price\":([0-9]+)");
+        String ticker = matchFinder("ticker\":\"([a-zA-Z]*)");
+        String password = matchFinder("password\":\"([0-9]*)");
+        String username = matchFinder("username\":\"([a-zA-Z]*)");
 
-
-
-        Pattern pattern = Pattern.compile("ticker\":\"([a-zA-Z]*)");
-        Matcher matcher = pattern.matcher(json.get(key).toString());
-        if (matcher.find()) {
-            String valueTicker = matcher.group(1);
-            System.out.println("---------------------------------++++++++++");
-            System.out.println(valueTicker + "  value");
-        }
-        Pattern patternPass = Pattern.compile("password\":\"([1-9]*)");
-        Matcher matcherPass = patternPass.matcher(json.get(key).toString());
-        if (matcherPass.find()) {
-            String valuePass = matcherPass.group(1);
-            System.out.println("---------------------------------++++++++++");
-            System.out.println(valuePass + "  value");
-        }
-        Pattern patternUsername = Pattern.compile("username\":\"([a-zA-Z]*)");
-        Matcher matcherUsername = patternUsername.matcher(json.get(key).toString());
-        if (matcherUsername.find()) {
-            String valueUsername = matcherUsername.group(1);
-            System.out.println("---------------------------------++++++++++");
-            System.out.println(valueUsername + "  value");
-        }
-
-
-        for (String s : array)  {
-            if (s.contains("ticker\":")) {
-                String[] stringTicker = s.split("ticker\":");
-                String ticker = stringTicker[1].split("}")[0];
-                System.out.println("---------------------------------");
-                System.out.println(ticker);
-            }
-            if (s.contains("password\":")) {
-                String[] stringPass = s.split("password\":");
-                String pass = stringPass[1].split(",")[0];
-                System.out.println("---------------------------------");
-                System.out.println(pass);
-            }
-            if (s.contains("username\":")) {
-                String[] stringName = s.split("username\":");
-                String userName = stringName[1].split("}")[0];
-                System.out.println("---------------------------------");
-                System.out.println(userName);
-            }
-            System.out.println("--------------");
-            System.out.println(s);
-        }
-
-        return new UserProfileAndWallet(new UserProfile("ali", "123"), new StocksInWallet());
+        UserProfile profile = new UserProfile(username, password);
+        StocksInWallet stocksInWallet = new StocksInWallet();
+        stocksInWallet.addPurchasedStock(new PurchasedStock(new Stock(ticker),
+                Integer.parseInt(number), Double.parseDouble(price)));
+        return new UserProfileAndWallet(profile,stocksInWallet);
     }
 
-
+    // REQUIRES: regex must have at least one group
+    private String matchFinder(String regex) {
+        String key = "userProfileAndWallets";
+        String value = "";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(json.get(key).toString());
+        if (matcher.find()) {
+            value = matcher.group(1);
+        }
+        return value;
+    }
 }
