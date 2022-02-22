@@ -7,6 +7,8 @@ import persistence.JsonWriting;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 // This is the class that users can input their trading requests;
@@ -23,8 +25,8 @@ public class UserInteraction {
     private UserProfile userProfile;
     private UserProfileAndWallet userProfileAndWallet;
     private boolean isSignedUp = false;
+    private boolean isLoggedIn = false;
     private JsonWriting jsonWriting;
-    private int isSetUpCounter = 0;
     private JsonReading jsonReading;
 
     // EFFECT: initializing scanner, stockInWallet and userProfileAndWallet, and calling the starting page
@@ -43,6 +45,8 @@ public class UserInteraction {
         String answer = scanner.next();
         if (answer.equalsIgnoreCase("s")) {
             createProfile();
+            isSignedUp = true;
+            questionnaire();
         } else if (answer.equalsIgnoreCase("l")) {
             logIn();
         } else {
@@ -51,39 +55,17 @@ public class UserInteraction {
     }
 
     // MODIFIES: this
-    // EFFECT: ask the user to login or quit and acts correspondingly
-    private void logInAgainPage() {
-        System.out.println("Log in again(l) or Quit(q)?");
-        String answer = scanner.next();
-        if (answer.equalsIgnoreCase("l")) {
-            logIn();
-        } else {
-            System.out.println("Hope to see you soon!");
-            System.exit(0);
-        }
-    }
-
-    // MODIFIES: this
     // EFFECT: asks for username and password, if founded in the system, showing their wallet content,
     // else heading back to the logInAgain or startingPage method
     private void logIn() {
-        String name = askUserName();
-        String password = checkPassword();
-        boolean found = false;
-        int counter  = 0;
-        for (UserProfile key : userProfileAndWallet.getAssociatedWallet().keySet()) {
-            // counter was needed because the first element in the list is null
-            if (counter > 0 && key.getUserName().equals(name)) {
-                if (key.getPassword().equals(password)) {
-                    found = true;
-                    showTheWalletContent();
-                    showActionType();
-                    break;
-                }
-            }
-            counter++;
+        createProfile();
+        if (checkFileExists(JSON_STORAGE + "/" + userProfile.getUserName()
+                    + userProfile.getPassword() + ".json")) {
+            isLoggedIn = true;
+            loadData();
+            showActionType();
         }
-        navigateUserNotFound(found);
+        navigateUserNotFound(isLoggedIn);
     }
 
     // MODIFIES: this
@@ -92,7 +74,7 @@ public class UserInteraction {
         if (!found) {
             System.out.println("Sorry, could not find you in our system!, try again");
             if (isSignedUp) {
-                logInAgainPage();
+                logIn();
             } else {
                 startingPage();
             }
@@ -105,16 +87,13 @@ public class UserInteraction {
         String name = askUserName();
         String password = checkPassword();
         userProfile = new UserProfile(name, password);
-        isSignedUp = true;
         changeUserProfileAndWallet();
-        loadData();
-        questionnaire();
     }
 
     // REQUIRES: username must be without whitespaces in between
     // EFFECT: asks for username and returns it
     public String askUserName() {
-        System.out.println("What is your userName?");
+        System.out.println("What is your userName(without spaces)?");
         return scanner.next();
     }
 
@@ -139,9 +118,6 @@ public class UserInteraction {
         System.out.println("What is your password (at least 8 characters or digits)?");
         return scanner.next();
     }
-
-
-
 
     // MODIFIES: this
     // EFFECT: asking the users about their risk tolerance and calling pickInvestment
@@ -188,7 +164,9 @@ public class UserInteraction {
         System.out.println("Do you want to buy(B), sell(S), or quit(Q)?");
         String answer = scanner.next();
         if (answer.equalsIgnoreCase("b")) {
-            showDescription();
+            if (!isLoggedIn) {
+                showDescription();
+            }
             buyingStocks();
         } else if (answer.equalsIgnoreCase("s")) {
             sellingStock();
@@ -204,7 +182,7 @@ public class UserInteraction {
             System.out.println("It was nice serving you, see you soon! " + userProfile.getUserName());
             System.out.println("Your wallet content for a last look :)");
             showTheWalletContent();
-            logInAgainPage();
+            System.exit(0);
         }
     }
 
@@ -295,7 +273,7 @@ public class UserInteraction {
         if (!wasSuccessful) {
             System.out.println("Insufficient funding! Please look at the listed stocks you have and try again!");
             showTheWalletContent();
-            sellingStock();
+            showActionType();
         }
         showTheWalletContent();
         changeUserProfileAndWallet();
@@ -305,9 +283,13 @@ public class UserInteraction {
     // EFFECT: showing the wallet's content to the user
     public void showTheWalletContent() {
         List<PurchasedStock> stocks = stocksInWallet.getStocks();
-        for (PurchasedStock stock : stocks) {
-            System.out.println("You have " + stock.getNumber() + " shares of " + stock.getStock().getTicker());
-            System.out.println("with the value of: " + stock.getPrice() * stock.getNumber());
+        if (stocks.isEmpty()) {
+            System.out.println("You are currently not owning any stocks");
+        } else {
+            for (PurchasedStock stock : stocks) {
+                System.out.println("You have " + stock.getNumber() + " shares of " + stock.getStock().getTicker());
+                System.out.println("with the value of: " + stock.getPrice() * stock.getNumber());
+            }
         }
     }
 
@@ -319,7 +301,8 @@ public class UserInteraction {
 
     // EFFECT: saving the userProfileAndWallet to the file
     public void saveUserInfo() throws FileNotFoundException {
-        jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userProfile.getUserName() + ".json");
+        jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userProfile.getUserName()
+                + userProfile.getPassword() + ".json");
         jsonWriting.open();
         jsonWriting.write(userProfileAndWallet);
         jsonWriting.close();
@@ -330,15 +313,21 @@ public class UserInteraction {
     public void loadData() {
         System.out.println("Do you want to load your data?(y/n)");
         if (scanner.next().equals("y")) {
-            jsonReading = new JsonReading(JSON_STORAGE + "/" + userProfile.getUserName() + ".json");
+            jsonReading = new JsonReading(JSON_STORAGE + "/" + userProfile.getUserName()
+                    + userProfile.getPassword() + ".json");
             try {
                 userProfileAndWallet = jsonReading.read();
                 stocksInWallet = userProfileAndWallet.getWallet();
                 investment.setStocksInWallet(stocksInWallet);
                 showTheWalletContent();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Sorry we cannot find you in the system");
             }
         }
+    }
+
+    // EFFECTS: checks if the userName with the given password exists by checking file path
+    public Boolean checkFileExists(String path) {
+        return Files.exists(Paths.get(path));
     }
 }
