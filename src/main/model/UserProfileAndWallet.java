@@ -34,6 +34,10 @@ public class UserProfileAndWallet {
         return wallet;
     }
 
+    public UserProfile getProfile() {
+        return profile;
+    }
+
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("profile", profile.toJson());

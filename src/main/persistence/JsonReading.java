@@ -4,7 +4,6 @@ import model.*;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-
+// citation: this is the similar code that can be found on the repository: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonReading {
     private final String source;
     private JSONObject json;
@@ -35,11 +34,9 @@ public class JsonReading {
     //EFFECTS: returning a string that represent the save data
     private String readFile(String source) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
-
         try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s));
         }
-
         return contentBuilder.toString();
     }
 

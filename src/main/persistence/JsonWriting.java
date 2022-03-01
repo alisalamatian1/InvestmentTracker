@@ -8,7 +8,7 @@ import model.UserProfileAndWallet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-// citation: this is the same code that can be found on this repository: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+// citation: this is the similar code that can be found on this repository: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonWriting {
     private static final int TAB = 4;
     private PrintWriter writer;
@@ -29,7 +29,6 @@ public class JsonWriting {
     // MODIFIES: this
     // EFFECTS: writes JSON representation of workroom to file
     public void write(UserProfileAndWallet userProfileAndWallet) {
-        //JSONArray json = userProfileAndWallet.toArrayOfJson();
         JSONObject json = userProfileAndWallet.toJsonObject();
         saveToFile(json.toString(TAB));
     }

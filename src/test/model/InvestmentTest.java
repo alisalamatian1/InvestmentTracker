@@ -21,35 +21,55 @@ public class InvestmentTest {
     }
 
     @Test
-    public void sellingStocksWithSufficientFundingNotRemovingTest() throws NegativeShareSellingException {
+    public void sellingStocksWithSufficientFundingNotRemovingTest() {
         stocksInWallet = investment.getStocksInWallet();
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,100)));
-        assertTrue (investment.sellingStocks(ticker, 2));
+        try {
+            assertTrue(investment.sellingStocks(ticker, 2));
+        } catch (NegativeShareSellingException e) {
+            fail("did not except an exception!");
+        }
         assertEquals(8,stocksInWallet.getStocks().get(0).getNumber());
         assertEquals(1, stocksInWallet.getStocks().size());
 
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,100)));
-        assertTrue (investment.sellingStocks(ticker, 2));
+        try {
+            assertTrue (investment.sellingStocks(ticker, 2));
+        } catch (NegativeShareSellingException e) {
+            fail("did not except an exception!");
+        }
         assertEquals(6,stocksInWallet.getStocks().get(0).getNumber());
         assertEquals(2, stocksInWallet.getStocks().size());
 
     }
 
     @Test
-    public void sellingStocksWithSufficientFundingRemovingTest() throws NegativeShareSellingException {
+    public void sellingStocksWithSufficientFundingRemovingTest() {
         stocksInWallet = investment.getStocksInWallet();
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,100)));
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,100)));
         //assertTrue (investment.sellingStocks(stock, 12));
-        investment.sellingStocks(ticker, 12);
+        try {
+            investment.sellingStocks(ticker, 12);
+        } catch (NegativeShareSellingException e) {
+            fail("did not except an exception!");
+        }
         assertEquals(8,stocksInWallet.getStocks().get(0).getNumber());
         assertEquals(1, stocksInWallet.getStocks().size());
 
 
-        assertTrue (investment.sellingStocks(ticker, 7));
+        try {
+            assertTrue (investment.sellingStocks(ticker, 7));
+        } catch (NegativeShareSellingException e) {
+            fail("did not except an exception!");
+        }
         assertEquals(1,stocksInWallet.getStocks().get(0).getNumber());
         assertEquals(1, stocksInWallet.getStocks().size());
-        assertTrue(investment.sellingStocks(ticker, 1));
+        try {
+            assertTrue(investment.sellingStocks(ticker, 1));
+        } catch (NegativeShareSellingException e) {
+            fail("did not except an exception!");
+        }
         assertEquals(0,stocksInWallet.getStocks().size());
 
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,101)));
@@ -57,27 +77,57 @@ public class InvestmentTest {
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,102)));
         stocksInWallet.addPurchasedStock(new PurchasedStock(new Stock("TSLA"), 3,1700));
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,103)));
-        investment.sellingStocks(ticker,25);
+        try {
+            investment.sellingStocks(ticker,25);
+        } catch (NegativeShareSellingException e) {
+            fail("did not except an exception!");
+        }
         assertEquals(3,stocksInWallet.getStocks().size());
         assertEquals(5,stocksInWallet.getStocks().get(2).getNumber());
         assertEquals(103,stocksInWallet.getStocks().get(2).getPrice());
 
         PurchasedStock purchasedStock = new PurchasedStock(stock, 10, 50);
         stocksInWallet.addPurchasedStock(purchasedStock);
-        assertTrue (investment.sellingStocks(ticker,6));
+        try {
+            assertTrue (investment.sellingStocks(ticker,6));
+        } catch (NegativeShareSellingException e) {
+            fail("did not except an exception!");
+        }
         assertEquals(4, stocksInWallet.getStocks().get(3).getNumber());
         assertEquals(50, stocksInWallet.getStocks().get(3).getPrice());
     }
 
     @Test
-    public void sellingStocksWithInsufficientFundingTest() throws NegativeShareSellingException {
+    public void sellingStocksWithInsufficientFundingTest() {
         stocksInWallet = investment.getStocksInWallet();
         stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,100)));
-        assertFalse (investment.sellingStocks(ticker, 12));
+        try {
+            assertFalse (investment.sellingStocks(ticker, 12));
+        } catch (NegativeShareSellingException e) {
+            fail("did not except an exception!");
+        }
         assertEquals(10,stocksInWallet.getStocks().get(0).getNumber());
         assertEquals(1, stocksInWallet.getStocks().size());
 
-        assertFalse (investment.sellingStocks(ticker, 11));
+        try {
+            assertFalse (investment.sellingStocks(ticker, 11));
+        } catch (NegativeShareSellingException e) {
+            fail("did not except an exception!");
+        }
+        assertEquals(10,stocksInWallet.getStocks().get(0).getNumber());
+        assertEquals(1, stocksInWallet.getStocks().size());
+    }
+
+    @Test
+    public void sellingWithException() {
+        stocksInWallet = investment.getStocksInWallet();
+        stocksInWallet.addPurchasedStock((new PurchasedStock(stock, 10,100)));
+        try {
+            assertTrue(investment.sellingStocks(ticker, -1));
+            fail("expected an Exception!");
+        } catch (NegativeShareSellingException e) {
+            // expected
+        }
         assertEquals(10,stocksInWallet.getStocks().get(0).getNumber());
         assertEquals(1, stocksInWallet.getStocks().size());
     }

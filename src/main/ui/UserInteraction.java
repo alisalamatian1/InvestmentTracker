@@ -176,14 +176,21 @@ public class UserInteraction {
                 try {
                     saveUserInfo();
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    System.out.println("Sorry, could not find the file!");
+                } finally {
+                    jsonWriting.close();
                 }
             }
-            System.out.println("It was nice serving you, see you soon! " + userProfile.getUserName());
-            System.out.println("Your wallet content for a last look :)");
-            showTheWalletContent();
-            System.exit(0);
+            exit();
         }
+    }
+
+    // EFFECT: saying goodbye and exiting the app
+    private void exit() {
+        System.out.println("It was nice serving you, see you soon! " + userProfile.getUserName());
+        System.out.println("Your wallet content for a last look :)");
+        showTheWalletContent();
+        System.exit(0);
     }
 
     // EFFECT: showing the list of stocks according to the chosen type of investment
