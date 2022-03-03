@@ -182,5 +182,11 @@ public class InvestmentTest {
         assertEquals(1, test.getStocks().get(0).getNumber());
     }
 
+    @Test
+    public void testSetProfit() {
+        investment.setProfit(3);
+        assertEquals(3, investment.getProfit());
+    }
+
 
 }
