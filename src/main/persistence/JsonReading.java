@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+// A class for reading the JSON file
 // citation: this is the similar code that can be found on the repository: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonReading {
     private final String source;
@@ -40,6 +41,7 @@ public class JsonReading {
         return contentBuilder.toString();
     }
 
+    // EFFECTS: parses userProfileAndWallet by taking out profile and stocksInWallet and making an object
     private UserProfileAndWallet parseUserProfileAndWallet() {
         String password = matchFinder("password\":\"([0-9]*)");
         String username = matchFinder("username\":\"([a-zA-Z]*)");
@@ -57,6 +59,7 @@ public class JsonReading {
     }
 
     // REQUIRES: regex must have at least one group
+    // EFFECTS: searching for the given pattern and returning the wanted string based on that
     private String matchFinder(String regex) {
         String key = "userProfileAndWallets";
         String value = "";
@@ -69,6 +72,7 @@ public class JsonReading {
     }
 
     // REQUIRES: regex must have at least one group
+    // EFFECTS: searching for the given pattern and returning the wanted string based on that
     private ArrayList<String> matchFinderArray(String regex) {
         String key = "userProfileAndWallets";
         ArrayList<String> values = new ArrayList<>();

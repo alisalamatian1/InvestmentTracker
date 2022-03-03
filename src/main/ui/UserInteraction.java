@@ -56,7 +56,7 @@ public class UserInteraction {
 
     // MODIFIES: this
     // EFFECT: asks for username and password, if founded in the system, showing their wallet content,
-    // else heading back to the logInAgain or startingPage method
+    // else navigating to the right method
     private void logIn() {
         createProfile();
         if (checkFileExists(JSON_STORAGE + "/" + userProfile.getUserName()
@@ -306,6 +306,7 @@ public class UserInteraction {
         userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);
     }
 
+    // MODIFIES: this
     // EFFECT: saving the userProfileAndWallet to the file
     public void saveUserInfo() throws FileNotFoundException {
         jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userProfile.getUserName()

@@ -5,9 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import model.UserProfileAndWallet;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
+// A class to write into a file (in a JSON format of UserProfileAndWallet)
 // citation: this is the similar code that can be found on this repository: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonWriting {
     private static final int TAB = 4;
@@ -27,7 +27,7 @@ public class JsonWriting {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
+    // EFFECTS: writes JSON representation of UserProfileAndWallet to file
     public void write(UserProfileAndWallet userProfileAndWallet) {
         JSONObject json = userProfileAndWallet.toJsonObject();
         saveToFile(json.toString(TAB));
