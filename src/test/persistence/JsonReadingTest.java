@@ -17,6 +17,7 @@ public class JsonReadingTest {
             assertEquals(1, userProfileAndWallet.getWallet().getStocks().get(0).getNumber());
             assertEquals(1, userProfileAndWallet.getWallet().getStocks().size());
             assertEquals("123", userProfileAndWallet.getProfile().getPassword());
+            assertEquals(100, userProfileAndWallet.getProfit());
         } catch (IOException e) {
             fail("did not expect an error");
         }

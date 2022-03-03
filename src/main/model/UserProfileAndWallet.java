@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class UserProfileAndWallet {
     private UserProfile profile;
     private StocksInWallet wallet;
+    private double profit;
     private HashMap<UserProfile, StocksInWallet> associatedWallet = new HashMap<>();
 
     // EFFECT: constructing a UserProfileAndWallet by putting users profile and stocks in a list
@@ -38,9 +39,18 @@ public class UserProfileAndWallet {
         return profile;
     }
 
+    public void setProfit(double profit) {
+        this.profit = profit;
+    }
+
+    public double getProfit() {
+        return profit;
+    }
+
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("profile", profile.toJson());
+        json.put("profit", profit);
         json.put("wallet", wallet.toJson());
         return json;
     }

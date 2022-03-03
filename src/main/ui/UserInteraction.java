@@ -28,6 +28,7 @@ public class UserInteraction {
     private boolean isLoggedIn = false;
     private JsonWriting jsonWriting;
     private JsonReading jsonReading;
+    private double profit;
 
     // EFFECT: initializing scanner, stockInWallet and userProfileAndWallet, and calling the starting page
     public UserInteraction() {
@@ -188,8 +189,6 @@ public class UserInteraction {
     // EFFECT: saying goodbye and exiting the app
     private void exit() {
         System.out.println("It was nice serving you, see you soon! " + userProfile.getUserName());
-        System.out.println("Your wallet content for a last look :)");
-        showTheWalletContent();
         System.exit(0);
     }
 
@@ -272,7 +271,7 @@ public class UserInteraction {
         double price = scanner.nextDouble();
         Boolean wasSuccessful = null;
         try {
-            wasSuccessful = investment.sellingStocks(ticker, numberOfShares);
+            wasSuccessful = investment.sellingStocks(ticker, numberOfShares, price);
         } catch (NegativeShareSellingException e) {
             System.out.println("please enter positive number of shares only.");
             sellingStock();
@@ -282,6 +281,8 @@ public class UserInteraction {
             showTheWalletContent();
             showActionType();
         }
+        userProfileAndWallet.setProfit(investment.getProfit());
+        this.profit = investment.getProfit();
         showTheWalletContent();
         changeUserProfileAndWallet();
         showActionType();
@@ -298,6 +299,7 @@ public class UserInteraction {
                 System.out.println("with the value of: " + stock.getPrice() * stock.getNumber());
             }
         }
+        System.out.println("Your overall profit: " + profit);
     }
 
     // MODIFIES: this
@@ -327,6 +329,8 @@ public class UserInteraction {
                 userProfileAndWallet = jsonReading.read();
                 stocksInWallet = userProfileAndWallet.getWallet();
                 investment.setStocksInWallet(stocksInWallet);
+                investment.setProfit(userProfileAndWallet.getProfit());
+                this.profit = userProfileAndWallet.getProfit();
                 showTheWalletContent();
             } catch (IOException e) {
                 System.out.println("Sorry we cannot find you in the system");

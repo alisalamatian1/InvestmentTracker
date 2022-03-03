@@ -45,6 +45,8 @@ public class JsonReading {
     private UserProfileAndWallet parseUserProfileAndWallet() {
         String password = matchFinder("password\":\"([0-9]*)");
         String username = matchFinder("username\":\"([a-zA-Z]*)");
+        String profitString = matchFinder("profit\":([0-9]*)");
+        double profit = Double.parseDouble(profitString);
         ArrayList<String> tickers = matchFinderArray("ticker\":\"([a-zA-Z]*)");
         ArrayList<String> numbers = matchFinderArray("number\":([0-9]+)");
         ArrayList<String> prices = matchFinderArray("price\":([0-9]+)");
@@ -55,7 +57,9 @@ public class JsonReading {
             stocksInWallet.addPurchasedStock(new PurchasedStock(new Stock(tickers.get(i)),
                     Integer.parseInt(numbers.get(i)), Double.parseDouble(prices.get(i))));
         }
-        return new UserProfileAndWallet(profile, stocksInWallet);
+        UserProfileAndWallet userProfileAndWallet = new UserProfileAndWallet(profile, stocksInWallet);
+        userProfileAndWallet.setProfit(profit);
+        return userProfileAndWallet;
     }
 
     // REQUIRES: regex must have at least one group

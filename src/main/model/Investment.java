@@ -11,6 +11,8 @@ public class Investment {
     private PurchasedStock purchasedStock;
     private StocksInWallet stocksInWallet = new StocksInWallet();
     private ArrayList<PurchasedStock> needToRemove = new ArrayList<>();
+    private double profit = 0.0;
+    private double sellingPrice = 0.0;
 
     // EFFECT: constructing an Investment object with the given typeOfInvestment and calling a method to show actions
     public Investment() {
@@ -19,11 +21,12 @@ public class Investment {
     // MODIFIES: this
     // EFFECT: Selling the chosen n stocks by removing the first n of the particular stock from the user's wallet and
     // reporting the profit; if not enough funding giving them an error
-    public Boolean sellingStocks(String tickerSoldStock, int numberOfToSellShares)
+    public Boolean sellingStocks(String tickerSoldStock, int numberOfToSellShares, double sellingPrice)
             throws NegativeShareSellingException {
         if (numberOfToSellShares <= 0) {
             throw new NegativeShareSellingException();
         }
+        this.sellingPrice = sellingPrice;
         return findingTheStockInWalletAndReducing(numberOfToSellShares, tickerSoldStock);
     }
 
@@ -38,6 +41,7 @@ public class Investment {
             if (stockInWallet.getStock().getTicker().equalsIgnoreCase(tickerSoldStock)) {
                 if (stockInWallet.getNumber() > numberOfToSellShares) {
                     stockInWallet.decreasingTheNumberOfShares(numberOfToSellShares);
+                    calculateProfit(stockInWallet.getPrice(), numberOfToSellShares);
                     enoughFunding = false;
                     break;
                 } else {
@@ -83,6 +87,7 @@ public class Investment {
                 numberOfToSellShares -= currentlyChecking.getNumber();
             } else {
                 currentlyChecking.decreasingTheNumberOfShares(numberOfToSellShares);
+                calculateProfit(currentlyChecking.getPrice(), numberOfToSellShares);
                 indexThatProvidesTheLastFunding = index;
                 break;
             }
@@ -98,6 +103,8 @@ public class Investment {
             if (index == indexThatProvidesTheLastFunding) {
                 break;
             }
+            calculateProfit(stocksInWallet.getStocks().get(index - counter).getPrice(),
+                    stocksInWallet.getStocks().get(index - counter).getNumber());
             stocksInWallet.getStocks().remove((index - counter));
             counter++;
         }
@@ -113,11 +120,25 @@ public class Investment {
         return stocksInWallet;
     }
 
+    // MODIFIES: this
+    // EFFECTS: calculating profit based on the selling and bought price and number of sold shares
+    private void calculateProfit(double boughtPrice, int numberOfSoldShares) {
+        profit += numberOfSoldShares * (sellingPrice - boughtPrice);
+    }
+
     public StocksInWallet getStocksInWallet() {
         return stocksInWallet;
     }
 
     public void setStocksInWallet(StocksInWallet stocksInWallet) {
         this.stocksInWallet = stocksInWallet;
+    }
+
+    public double getProfit() {
+        return profit;
+    }
+
+    public void setProfit(double profit) {
+        this.profit = profit;
     }
 }

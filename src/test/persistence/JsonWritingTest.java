@@ -20,6 +20,7 @@ public class JsonWritingTest {
         stocksInWallet = new StocksInWallet();
         stocksInWallet.addPurchasedStock(new PurchasedStock(new Stock("vfv"), 1, 100));
         userProfileAndWallet = new UserProfileAndWallet(userProfile, stocksInWallet);
+        userProfileAndWallet.setProfit(100);
     }
 
     @Test
@@ -37,9 +38,9 @@ public class JsonWritingTest {
             assertEquals(stocksInWallet.getStocks().size(), userProfileAndWalletTest.getWallet().getStocks().size());
             assertEquals(userProfile.getUserName(), userProfileAndWalletTest.getProfile().getUserName());
             assertEquals(userProfile.getPassword(), userProfileAndWalletTest.getProfile().getPassword());
+            assertEquals(100, userProfileAndWalletTest.getProfit());
         } catch (IOException e) {
-            fail("Something is totally off");
-            System.out.println(e.fillInStackTrace());
+            fail("did not expect an exception");
         }
     }
 
