@@ -149,5 +149,13 @@ public class InvestmentTest {
         assertEquals(2, investment.getStocksInWallet().getStocks().size());
     }
 
+    @Test
+    public void testSetStocksInWallet() {
+        StocksInWallet test = new StocksInWallet();
+        test.addPurchasedStock (new PurchasedStock(stock, 1, 1));
+        investment.setStocksInWallet(test);
+        assertEquals(1, test.getStocks().get(0).getNumber());
+    }
+
 
 }

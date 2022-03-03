@@ -60,7 +60,7 @@ public class JsonReading {
 
     // REQUIRES: regex must have at least one group
     // EFFECTS: searching for the given pattern and returning the wanted string based on that
-    private String matchFinder(String regex) {
+    public String matchFinder(String regex) {
         String key = "userProfileAndWallets";
         String value = "";
         Pattern pattern = Pattern.compile(regex);

@@ -23,7 +23,7 @@ public class JsonReadingTest {
     }
 
     @Test
-    void readerInvalidTest() {
+    public void readerInvalidTest() {
         JsonReading jsonReading = new JsonReading("./data/noSuchFile.json");
         try {
             UserProfileAndWallet userProfileAndWallet = jsonReading.read();
@@ -31,5 +31,12 @@ public class JsonReadingTest {
         } catch (IOException e) {
             // pass
         }
+    }
+
+    @Test
+    public void testMatchFinder() throws IOException {
+        JsonReading jsonReading = new JsonReading("./data/testingWriteMethod.json");
+        jsonReading.read();
+        assertEquals("", jsonReading.matchFinder("invalidRegexForChecking"));
     }
 }
