@@ -1,0 +1,24 @@
+{"userProfileAndWallets": {
+    "wallet": [
+        {
+            "number": 3,
+            "price": 97,
+            "Stock": {"ticker": "vfv"}
+        },
+        {
+            "number": 1,
+            "price": 250,
+            "Stock": {"ticker": "apple"}
+        },
+        {
+            "number": 1,
+            "price": 120,
+            "Stock": {"ticker": "vfv"}
+        }
+    ],
+    "profile": {
+        "password": "12345678",
+        "username": "aliprofitable"
+    },
+    "profit": 100
+}}

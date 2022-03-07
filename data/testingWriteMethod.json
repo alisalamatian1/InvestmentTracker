@@ -1,0 +1,12 @@
+{"userProfileAndWallets": {
+    "wallet": [{
+        "number": 1,
+        "price": 100,
+        "Stock": {"ticker": "vfv"}
+    }],
+    "profile": {
+        "password": "123",
+        "username": "ali"
+    },
+    "profit": 100
+}}
