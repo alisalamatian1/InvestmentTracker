@@ -46,11 +46,10 @@ public class Navigator {
                     System.out.println("I am here in if");
                     cl.show(mainPanel, "stock");
                 } else {
-                    System.out.println("in the error message for login");
-                    JLabel errorMessage = new JLabel("try again"); //User does not exist, please
-                    errorMessage.setBounds(10,100,100,25);
-                    errorMessage.setVisible(true);
-                    loginPanel.add(errorMessage);
+                    JOptionPane.showMessageDialog(mainWindow,
+                            "User does not exist, please try again",
+                            "Invalid username or password",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -60,3 +59,4 @@ public class Navigator {
 
 
 // resources: https://github.com/BranislavLazic/SwingTutorials/blob/master/src/main/java/CardLayoutTutorial.java for cardLayout
+// error message from https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#features
