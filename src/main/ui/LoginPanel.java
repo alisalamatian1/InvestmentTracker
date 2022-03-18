@@ -1,6 +1,10 @@
 package ui;
 
+import model.UserProfileAndWallet;
+import persistence.JsonReading;
+
 import javax.swing.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -10,6 +14,7 @@ public class LoginPanel extends JPanel {
     StockSuggestionPanel investmentSuggestion;
     private static final String JSON_STORAGE = "./data/";
     private boolean couldLogIn = false;
+    private JsonReading jsonReading;
 
     public LoginPanel() {
         initializeUserName();
@@ -56,10 +61,22 @@ public class LoginPanel extends JPanel {
         String userName = userText.getText();
         String password = passwordText.getText();
         if (checkFileExists(JSON_STORAGE + "/" + userName + password + ".json")) {
-            System.out.println("user exists");
+            jsonReading = new JsonReading(JSON_STORAGE + "/" + userName + password + ".json");
             return true;
         }
         return false;
+    }
+
+    // REQUIRES: jsonReading not to be null
+    public UserProfileAndWallet loadData() {
+        UserProfileAndWallet userProfileAndWallet = null;
+        try {
+            userProfileAndWallet = jsonReading.read();
+        } catch (IOException e) {
+            // todo: throw an error
+            System.out.println("Sorry we cannot find you in the system");
+        }
+        return userProfileAndWallet;
     }
 
     // EFFECTS: checks if the userName with the given password exists by checking file path
