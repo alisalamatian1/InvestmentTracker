@@ -32,6 +32,7 @@ public class Navigator {
     JPanel tabPanel;
     CardLayout cl;
     SellPanel sellPanel;
+    BuyPanel buyPanel;
 
     boolean loginStatus;
     private String typeOfInvestment;
@@ -117,8 +118,16 @@ public class Navigator {
                 "Does twice as much nothing");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
-        JComponent panel3 = makeTextPanel("Panel #3");
-        tabbedPane.addTab("Tab 3", icon, panel3,
+        buyPanel = new BuyPanel();
+        JButton buyButton = buyPanel.getBuyButton();
+        buyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("we are inside buying");
+                buyingStocks();
+            }
+        });
+        tabbedPane.addTab("Tab 3", icon, buyPanel,
                 "Still does nothing");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
@@ -155,7 +164,6 @@ public class Navigator {
     public void sellingStock() {
         String ticker = sellPanel.getTicker().getText();
         int numberOfShares = Integer.parseInt(sellPanel.getNumSharesText().getText());
-       // System.out.println("At what price you are selling? (please check https://finance.yahoo.com for live prices)");
         double price = Double.parseDouble(sellPanel.getPriceText().getText());
         Boolean wasSuccessful = null;
         try {
@@ -192,6 +200,23 @@ public class Navigator {
         jsonWriting.open();
         jsonWriting.write(userProfileAndWallet);
         jsonWriting.close();
+    }
+
+    public void buyingStocks() {
+        String ticker = buyPanel.getTicker().getText();
+        int numberOfShares = Integer.parseInt(buyPanel.getNumSharesText().getText());
+        double price = Double.parseDouble(buyPanel.getPriceText().getText());
+        Stock purchasingStock = new Stock(ticker);
+        // todo: check if the next line is necessary
+        investment.setStocksInWallet(stocksInWallet);
+        stocksInWallet = investment.buyingStocks(purchasingStock, numberOfShares, price);
+        changeUserProfileAndWallet();
+        try {
+            // todo: add an option to save the data
+            saveUserInfo();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 
