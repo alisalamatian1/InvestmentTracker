@@ -52,6 +52,19 @@ public class Navigator {
 
     public Navigator() {
         tabPanel = new JPanel();
+        tabPanel.setLayout(new BorderLayout());
+
+        JPanel left = new JPanel();
+        left.setLayout(new GridLayout(10, 1, 2, 5));
+        left.setBackground(Color.BLUE);
+        Button save = new Button("save");
+        Button load = new Button("load");
+        Button logOUt = new Button("log out");
+        left.add(save);
+        left.add(load);
+        left.add(logOUt);
+
+        tabPanel.add(left, BorderLayout.WEST);
         mainWindow = new MainWindow();
         loginPanel = new LoginPanel();
         cl = new CardLayout();
@@ -139,7 +152,7 @@ public class Navigator {
         tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
 
         //Add the tabbed pane to this panel.
-        tabPanel.add(tabbedPane);
+        tabPanel.add(tabbedPane, BorderLayout.CENTER);
     }
 
     protected JComponent makeTextPanel(String text) {
