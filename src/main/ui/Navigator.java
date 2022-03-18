@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JComponent;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class Navigator {
@@ -30,11 +31,11 @@ public class Navigator {
     WalletPanel walletPanel;
     JPanel tabPanel;
     CardLayout cl;
-    TradePanel tradePanel;
+    SellPanel sellPanel;
 
     boolean loginStatus;
     private String typeOfInvestment;
-    private Investment investment;
+    private Investment investment = new Investment();
     private java.util.List<Stock> balancedStocks;
     private java.util.List<Stock> conservativeStocks;
     private List<Stock> riskyStocks;
@@ -104,15 +105,15 @@ public class Navigator {
                 "Does nothing");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-        tradePanel = new TradePanel();
-        JButton sellButton = tradePanel.getSellButton();
+        sellPanel = new SellPanel();
+        JButton sellButton = sellPanel.getSellButton();
         sellButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                sellingStock();
             }
         });
-        tabbedPane.addTab("Tab 2", icon, tradePanel,
+        tabbedPane.addTab("Tab 2", icon, sellPanel,
                 "Does twice as much nothing");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
@@ -145,16 +146,17 @@ public class Navigator {
     //EFFECTS: reading the stored file
     public void settingDataAfterLoading(UserProfileAndWallet userProfileAndWallet) {
         stocksInWallet = userProfileAndWallet.getWallet();
-//        investment.setStocksInWallet(stocksInWallet);
-//        investment.setProfit(userProfileAndWallet.getProfit());
+        investment.setStocksInWallet(stocksInWallet);
+        investment.setProfit(userProfileAndWallet.getProfit());
         this.profit = userProfileAndWallet.getProfit();
+        userProfile = userProfileAndWallet.getProfile();
     }
 
     public void sellingStock() {
-        String ticker = tradePanel.getTicker().getText();
-        int numberOfShares = Integer.parseInt(tradePanel.getNumSharesText().getText());
+        String ticker = sellPanel.getTicker().getText();
+        int numberOfShares = Integer.parseInt(sellPanel.getNumSharesText().getText());
        // System.out.println("At what price you are selling? (please check https://finance.yahoo.com for live prices)");
-        double price = Double.parseDouble(tradePanel.getPriceText().getText());
+        double price = Double.parseDouble(sellPanel.getPriceText().getText());
         Boolean wasSuccessful = null;
         try {
             wasSuccessful = investment.sellingStocks(ticker, numberOfShares, price);
@@ -169,6 +171,12 @@ public class Navigator {
         userProfileAndWallet.setProfit(investment.getProfit());
         this.profit = investment.getProfit();
         changeUserProfileAndWallet();
+        try {
+            // todo: add an option to save the data
+            saveUserInfo();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
     // todo: make a button, so it refreshes the wallet content on change
 
@@ -178,9 +186,36 @@ public class Navigator {
         userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);
     }
 
+    public void saveUserInfo() throws FileNotFoundException {
+        jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userProfile.getUserName()
+                + userProfile.getPassword() + ".json");
+        jsonWriting.open();
+        jsonWriting.write(userProfileAndWallet);
+        jsonWriting.close();
+    }
+
+
 
 }
-
+// combo box, not used in the tradeClass:
+//
+//    private void makeSellAndBuyOption() {
+//        cb.setEditable(true);
+//        cb.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                JComboBox comboBox = (JComboBox) e.getSource();
+//                Object selected = comboBox.getSelectedItem();
+//                if (selected.toString().equals("buy")) {
+//                    System.out.println("we are inside buy");
+//                } else {
+//                    System.out.println(" we are inside sell");
+//                    cl.show(mainPanel, "sell");
+//                    System.out.println("still in sell");
+//                }
+//            }
+//        });
+//    }
 
 // resources: https://github.com/BranislavLazic/SwingTutorials/blob/master/src/main/java/CardLayoutTutorial.java for cardLayout
 // error message from https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#features
