@@ -1,6 +1,7 @@
 package ui;
 
 import model.*;
+import model.exceptions.NegativeShareSellingException;
 import persistence.JsonReading;
 import persistence.JsonWriting;
 
@@ -29,6 +30,8 @@ public class Navigator {
     WalletPanel walletPanel;
     JPanel tabPanel;
     CardLayout cl;
+    TradePanel tradePanel;
+
     boolean loginStatus;
     private String typeOfInvestment;
     private Investment investment;
@@ -101,8 +104,15 @@ public class Navigator {
                 "Does nothing");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-        JComponent panel2 = makeTextPanel("Panel #2");
-        tabbedPane.addTab("Tab 2", icon, panel2,
+        tradePanel = new TradePanel();
+        JButton sellButton = tradePanel.getSellButton();
+        sellButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        tabbedPane.addTab("Tab 2", icon, tradePanel,
                 "Does twice as much nothing");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
@@ -139,6 +149,35 @@ public class Navigator {
 //        investment.setProfit(userProfileAndWallet.getProfit());
         this.profit = userProfileAndWallet.getProfit();
     }
+
+    public void sellingStock() {
+        String ticker = tradePanel.getTicker().getText();
+        int numberOfShares = Integer.parseInt(tradePanel.getNumSharesText().getText());
+       // System.out.println("At what price you are selling? (please check https://finance.yahoo.com for live prices)");
+        double price = Double.parseDouble(tradePanel.getPriceText().getText());
+        Boolean wasSuccessful = null;
+        try {
+            wasSuccessful = investment.sellingStocks(ticker, numberOfShares, price);
+        } catch (NegativeShareSellingException e) {
+            // todo: add an error here
+            System.out.println("please enter positive number of shares only.");
+        }
+        if (!wasSuccessful) {
+            // todo: add an error here
+            System.out.println("Insufficient funding! Please look at the listed stocks you have and try again!");
+        }
+        userProfileAndWallet.setProfit(investment.getProfit());
+        this.profit = investment.getProfit();
+        changeUserProfileAndWallet();
+    }
+    // todo: make a button, so it refreshes the wallet content on change
+
+    // MODIFIES: this
+    // EFFECT: changing userProfileAndWallet when user changes their StocksInWallet
+    public void changeUserProfileAndWallet() {
+        userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);
+    }
+
 
 }
 

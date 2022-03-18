@@ -23,35 +23,18 @@ public class LoginPanel extends JPanel {
 
 
     private void initializeUserName() {
-        // Creating JLabel
         JLabel userLabel = new JLabel("User");
-        /* This method specifies the location and size
-         * of component. setBounds(x, y, width, height)
-         * here (x,y) are cordinates from the top left
-         * corner and remaining two arguments are the width
-         * and height of the component.
-         */
         userLabel.setBounds(10,20,80,25);
         this.add(userLabel);
-
-        /* Creating text field where user is supposed to
-         * enter user name.
-         */
         userText = new JTextField(20);
         userText.setBounds(100,20,165,25);
         this.add(userText);
     }
 
     private void initializePassword() {
-        // Same process for password label and text field.
         JLabel passwordLabel = new JLabel("Password");
         passwordLabel.setBounds(10,50,80,25);
         this.add(passwordLabel);
-
-        /*This is similar to text field but it hides the user
-         * entered data and displays dots instead to protect
-         * the password like we normally see on login screens.
-         */
         passwordText = new JPasswordField(20);
         passwordText.setBounds(100,50,165,25);
         this.add(passwordText);
