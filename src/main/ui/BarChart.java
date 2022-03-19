@@ -8,8 +8,8 @@ import java.awt.*;
 
 
 public class BarChart extends JPanel {
-    private static final int HEIGHT = 200;
-    private static final int WIDTH = 500;
+    private static final int HEIGHT = 600;
+    private static final int WIDTH = 600;
     private static final int Y_COORDINATE = HEIGHT;
     private StocksInWallet stocksInWallet;
 
@@ -17,6 +17,15 @@ public class BarChart extends JPanel {
         this.stocksInWallet = stocksInWallet;
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBorder(BorderFactory.createLineBorder(Color.black));
+        addStockLabels();
+    }
+
+    public void addStockLabels() {
+        JLabel stockLabels = new JLabel("The stock tickers are:");
+        this.add(stockLabels);
+        for (PurchasedStock stocks : stocksInWallet.getStocks()) {
+            addJLabel(0, HEIGHT, stocks.getStock().getTicker());
+        }
     }
 
     @Override
@@ -27,25 +36,29 @@ public class BarChart extends JPanel {
 
         // paint bars
         int maxHeight = calculateTheMaxHeight();
+        System.out.println("max height: " + maxHeight);
+        double maxHeightRatio =  ((double) HEIGHT) / maxHeight;
+        System.out.println(" ratio : " + maxHeightRatio);
         // todo: draw a line with the given width
         int widthGraphNoScaling = calculateNumOfGaps() + stocksInWallet.getStocks().size() + 2;
         int widthBar = WIDTH / widthGraphNoScaling;
-        int dx = widthBar;
+        int dx = 2 * widthBar;
+        g.drawLine(widthBar, Y_COORDINATE, WIDTH, Y_COORDINATE);
+        g.drawLine(widthBar, Y_COORDINATE, widthBar, 0);
         String tempName = stocksInWallet.getStocks().get(0).getStock().getTicker();
         for (PurchasedStock stocks : stocksInWallet.getStocks()) {
             Double value = stocks.getNumber() * stocks.getPrice();
-            int height = value.intValue();
+            Double heightDouble = value.intValue() * maxHeightRatio;
+            int height = heightDouble.intValue();
             if (!stocks.getStock().getTicker().equals(tempName)) {
                 tempName = stocks.getStock().getTicker();
                 dx += widthBar;
                 drawTheBar(g, dx, widthBar, height);
-                System.out.println("I am called inside the if ");
                 System.out.println("drawing " + stocks.getStock().getTicker() + stocks.getPrice() + ", x:" + dx + ", height: " + height);
                 dx += widthBar;
                 continue;
             }
             drawTheBar(g, dx, widthBar, height);
-            System.out.println(" I am called outside of if!!!");
             System.out.println("drawing " + stocks.getStock().getTicker() + stocks.getPrice() + ", x:" + dx + ", height: " + height);
 
             dx += widthBar;
@@ -82,4 +95,10 @@ public class BarChart extends JPanel {
         g.drawRect(dx, Y_COORDINATE - height, widthBar, height);
     }
     // todo: figure out the bug for the height of the bar, possibility they are too high
+
+    public void addJLabel(int dx, int dy, String name) {
+        JLabel ticker = new JLabel(name);
+        ticker.setLocation(dx, dy);
+        this.add(ticker);
+    }
 }
