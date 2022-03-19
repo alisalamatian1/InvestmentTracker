@@ -20,6 +20,7 @@ import javax.swing.JComponent;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.FileNotFoundException;
+import java.util.Comparator;
 import java.util.List;
 
 public class Navigator {
@@ -144,10 +145,25 @@ public class Navigator {
                 "Still does nothing");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
-        JComponent panel4 = makeTextPanel(
-                "Panel #4 (has a preferred size of 410 x 50).");
-        panel4.setPreferredSize(new Dimension(410, 50));
-        tabbedPane.addTab("Tab 4", icon, panel4,
+        //panel4.setPreferredSize(new Dimension(410, 50));
+
+        stocksInWallet.getStocks().sort(new Comparator<PurchasedStock>() {
+            @Override
+            public int compare(PurchasedStock o1, PurchasedStock o2) {
+                if (o1.getStock().getTicker().equals(o2.getStock().getTicker())) {
+                    return 0;
+                }
+                return o1.getStock().getTicker().compareTo(o2.getStock().getTicker());
+            }
+        });
+
+        BarChart chart = new BarChart(stocksInWallet);
+
+//        chart.addBar(Color.red, 100);
+//        chart.addBar(Color.green, 8);
+//        chart.addBar(Color.blue, 54);
+//        chart.addBar(Color.black, 23);
+        tabbedPane.addTab("Tab 4", icon, chart,
                 "Does nothing at all");
         tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
 
@@ -231,8 +247,7 @@ public class Navigator {
             e.printStackTrace();
         }
     }
-
-
+    // todo: JList for the first tab
 
 }
 // combo box, not used in the tradeClass:

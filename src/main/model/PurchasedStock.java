@@ -2,6 +2,9 @@ package model;
 
 import org.json.JSONObject;
 
+// todo: compare and sort
+
+
 // This class has the information about the purchased stocks
 public class PurchasedStock {
     private Stock stock;
