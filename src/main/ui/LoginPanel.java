@@ -4,40 +4,15 @@ import model.UserProfileAndWallet;
 import persistence.JsonReading;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class LoginPanel extends JPanel {
-    JTextField userText;
-    JPasswordField passwordText;
-    StockSuggestionPanel investmentSuggestion;
-    private static final String JSON_STORAGE = "./data/";
-    private boolean couldLogIn = false;
-    private JsonReading jsonReading;
+public class LoginPanel extends EnterPanel {
 
     public LoginPanel() {
-        initializeUserName();
-        initializePassword();
-    }
-
-
-    private void initializeUserName() {
-        JLabel userLabel = new JLabel("User");
-        userLabel.setBounds(10,20,80,25);
-        this.add(userLabel);
-        userText = new JTextField(20);
-        userText.setBounds(100,20,165,25);
-        this.add(userText);
-    }
-
-    private void initializePassword() {
-        JLabel passwordLabel = new JLabel("Password");
-        passwordLabel.setBounds(10,50,80,25);
-        this.add(passwordLabel);
-        passwordText = new JPasswordField(20);
-        passwordText.setBounds(100,50,165,25);
-        this.add(passwordText);
+        super();
     }
 
     public boolean checkForProfile() {
@@ -50,17 +25,6 @@ public class LoginPanel extends JPanel {
         return false;
     }
 
-    // REQUIRES: jsonReading not to be null
-    public UserProfileAndWallet loadData() {
-        UserProfileAndWallet userProfileAndWallet = null;
-        try {
-            userProfileAndWallet = jsonReading.read();
-        } catch (IOException e) {
-            // todo: throw an error
-            System.out.println("Sorry we cannot find you in the system");
-        }
-        return userProfileAndWallet;
-    }
 
     // EFFECTS: checks if the userName with the given password exists by checking file path
     public Boolean checkFileExists(String path) {

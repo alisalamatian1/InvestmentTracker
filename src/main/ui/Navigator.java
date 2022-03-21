@@ -28,6 +28,8 @@ public class Navigator {
     MainWindow mainWindow;
     JPanel mainPanel;
     LoginPanel loginPanel;
+    private SignUpPanel signUpPanel;
+    private JPanel startPanel;
     StockSuggestionPanel stockSuggestionPanel;
     WalletPanel walletPanel;
     JPanel tabPanel;
@@ -67,21 +69,42 @@ public class Navigator {
 
         tabPanel.add(left, BorderLayout.WEST);
         mainWindow = new MainWindow();
+        startPanel = new JPanel();
+        signUpPanel = new SignUpPanel();
         loginPanel = new LoginPanel();
+        makeTabbedStartPage();
         cl = new CardLayout();
         stockSuggestionPanel = new StockSuggestionPanel();
+        stockSuggestionPanel.setLayout(new GridLayout(12, 1, 2,2));
         mainPanel = new JPanel();
         mainPanel.setLayout(cl);
-        mainPanel.add(loginPanel, "login");
+        mainPanel.add(startPanel, "start");
         mainPanel.add(tabPanel, "tabPanel");
         mainPanel.add(stockSuggestionPanel, "stock");
-        cl.show(mainPanel, "login");
+        cl.show(mainPanel, "start");
         navigate();
     }
 
     public void navigate() {
         mainWindow.add(mainPanel);
         addLoggingButton();
+        addSigningButton();
+        addNextButton();
+    }
+
+
+    private void makeTabbedStartPage() {
+        JTabbedPane tabbedPane = new JTabbedPane();
+        ImageIcon icon = new ImageIcon();
+
+        tabbedPane.addTab("Sign up", icon, signUpPanel,
+                "Signing up");
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+
+        tabbedPane.addTab("Login", icon, loginPanel,
+                "Logging in");
+        tabbedPane.setMnemonicAt(1, KeyEvent.VK_1);
+        startPanel.add(tabbedPane, BorderLayout.CENTER);
     }
 
     // MODIFIES: this
@@ -100,7 +123,7 @@ public class Navigator {
                     userProfileAndWallet = loginPanel.loadData();
                     settingDataAfterLoading(userProfileAndWallet);
                     walletPanel = new WalletPanel(stocksInWallet);
-                    setUpTabPanel();
+                    setUpTabPanel("login");
                     cl.show(mainPanel, "tabPanel");
                 } else {
                     JOptionPane.showMessageDialog(mainWindow,
@@ -112,12 +135,48 @@ public class Navigator {
         });
     }
 
-    public void setUpTabPanel() {
+    // MODIFIES: this
+    // EFFECTS: creates a signup button
+    public void addSigningButton() {
+        JButton signUpButton = new JButton("sign up");
+        signUpButton.setBounds(10, 80, 80, 25);
+        signUpPanel.add(signUpButton);
+        signUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    signUpPanel.saveUserInfo();
+                } catch (FileNotFoundException ex) {
+                    // todo: throw an error
+                }
+                setDataAfterSignUp();
+                cl.show(mainPanel, "stock");
+            }
+        });
+    }
+
+    // MODIFY: this
+    // EFFECT: adding the next button for stockSuggestion Panel
+    private void addNextButton() {
+        JButton start = new JButton("Start investing!");
+        stockSuggestionPanel.add(start);
+        start.setLocation(200, 200);
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setUpTabPanel("signUp");
+                cl.show(mainPanel, "tabPanel");
+            }
+        });
+
+    }
+
+    public void setUpTabPanel(String namePanel) {
         JTabbedPane tabbedPane = new JTabbedPane();
         ImageIcon icon = new ImageIcon();
 
-        tabbedPane.addTab("Tab 1", icon, walletPanel,
-                "Does nothing");
+        tabbedPane.addTab("Wallet", icon, walletPanel,
+                "Wallet Content");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
         sellPanel = new SellPanel();
@@ -128,8 +187,8 @@ public class Navigator {
                 sellingStock();
             }
         });
-        tabbedPane.addTab("Tab 2", icon, sellPanel,
-                "Does twice as much nothing");
+        tabbedPane.addTab("Sell", icon, sellPanel,
+                "Selling Stocks");
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
         buyPanel = new BuyPanel();
@@ -141,8 +200,8 @@ public class Navigator {
                 buyingStocks();
             }
         });
-        tabbedPane.addTab("Tab 3", icon, buyPanel,
-                "Still does nothing");
+        tabbedPane.addTab("Buy", icon, buyPanel,
+                "Buying Stocks");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         //panel4.setPreferredSize(new Dimension(410, 50));
@@ -157,27 +216,14 @@ public class Navigator {
             }
         });
 
-        BarChart chart = new BarChart(stocksInWallet);
-
-//        chart.addBar(Color.red, 100);
-//        chart.addBar(Color.green, 8);
-//        chart.addBar(Color.blue, 54);
-//        chart.addBar(Color.black, 23);
-        tabbedPane.addTab("Tab 4", icon, chart,
-                "Does nothing at all");
-        tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
-
+        if (namePanel.equals("login")) {
+            BarChart chart = new BarChart(stocksInWallet);
+            tabbedPane.addTab("Bar Chart", icon, chart,
+                    "Asset Allocation Bar Chart");
+            tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
+        }
         //Add the tabbed pane to this panel.
         tabPanel.add(tabbedPane, BorderLayout.CENTER);
-    }
-
-    protected JComponent makeTextPanel(String text) {
-        JPanel panel = new JPanel(false);
-        JLabel filler = new JLabel(text);
-        filler.setHorizontalAlignment(JLabel.CENTER);
-        panel.setLayout(new GridLayout(1, 1));
-        panel.add(filler);
-        return panel;
     }
 
     //MODIFY: this
@@ -188,6 +234,10 @@ public class Navigator {
         investment.setProfit(userProfileAndWallet.getProfit());
         this.profit = userProfileAndWallet.getProfit();
         userProfile = userProfileAndWallet.getProfile();
+    }
+
+    public void setDataAfterSignUp() {
+        stocksInWallet = new StocksInWallet();
     }
 
     public void sellingStock() {
@@ -273,3 +323,4 @@ public class Navigator {
 // resources: https://github.com/BranislavLazic/SwingTutorials/blob/master/src/main/java/CardLayoutTutorial.java for cardLayout
 // error message from https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#features
 // tabbedpanel from https://docs.oracle.com/javase/tutorial/uiswing/components/tabbedpane.html
+

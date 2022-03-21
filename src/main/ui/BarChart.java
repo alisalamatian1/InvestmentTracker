@@ -94,7 +94,7 @@ public class BarChart extends JPanel {
         g.setColor(Color.red);
         g.drawRect(dx, Y_COORDINATE - height, widthBar, height);
     }
-    // todo: figure out the bug for the height of the bar, possibility they are too high
+    // todo: adding the labels at the right position and adding the axis labels
 
     public void addJLabel(int dx, int dy, String name) {
         JLabel ticker = new JLabel(name);
