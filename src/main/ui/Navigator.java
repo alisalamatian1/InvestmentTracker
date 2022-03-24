@@ -14,10 +14,7 @@ import java.awt.event.KeyEvent;
 //
 import javax.swing.JTabbedPane;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JComponent;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.FileNotFoundException;
 import java.util.Comparator;
@@ -51,7 +48,11 @@ public class Navigator {
     private JsonWriting jsonWriting;
     private JsonReading jsonReading;
     private double profit;
-
+    Button save;
+    Button load;
+    Button logOut;
+    JTabbedPane tabbedPane;
+    ImageIcon icon;
 
     public Navigator() {
         tabPanel = new JPanel();
@@ -60,12 +61,7 @@ public class Navigator {
         JPanel left = new JPanel();
         left.setLayout(new GridLayout(10, 1, 2, 5));
         left.setBackground(Color.BLUE);
-        Button save = new Button("save");
-        Button load = new Button("load");
-        Button logOUt = new Button("log out");
-        left.add(save);
-        left.add(load);
-        left.add(logOUt);
+        makeMenuButtons(left);
 
         tabPanel.add(left, BorderLayout.WEST);
         mainWindow = new MainWindow();
@@ -83,6 +79,46 @@ public class Navigator {
         mainPanel.add(stockSuggestionPanel, "stock");
         cl.show(mainPanel, "start");
         navigate();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adding save, load and log out buttons to the left panel and set their corresponding actions
+    private void makeMenuButtons(JPanel left) {
+        save = new Button("save");
+        load = new Button("load");
+        logOut = new Button("log out");
+        left.add(save);
+        left.add(load);
+        left.add(logOut);
+        setActions();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: setting up the actions of each button
+    private void setActions() {
+        save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    saveUserInfo();
+                } catch (FileNotFoundException ex) {
+                    // todo: add an error
+                }
+            }
+        });
+        load.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                settingDataAfterLoading();
+            }
+        });
+
+        logOut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
     }
 
     public void navigate() {
@@ -121,7 +157,7 @@ public class Navigator {
                     System.out.println("I am here in if");
                     // todo: add a panel to ask for loadingData
                     userProfileAndWallet = loginPanel.loadData();
-                    settingDataAfterLoading(userProfileAndWallet);
+                    settingDataAfterLoading();
                     walletPanel = new WalletPanel(stocksInWallet);
                     setUpTabPanel("login");
                     cl.show(mainPanel, "tabPanel");
@@ -172,12 +208,10 @@ public class Navigator {
     }
 
     public void setUpTabPanel(String namePanel) {
-        JTabbedPane tabbedPane = new JTabbedPane();
-        ImageIcon icon = new ImageIcon();
+        tabbedPane = new JTabbedPane();
+        icon = new ImageIcon();
 
-        tabbedPane.addTab("Wallet", icon, walletPanel,
-                "Wallet Content");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+        addWalletTab();
 
         sellPanel = new SellPanel();
         JButton sellButton = sellPanel.getSellButton();
@@ -226,9 +260,23 @@ public class Navigator {
         tabPanel.add(tabbedPane, BorderLayout.CENTER);
     }
 
+    private void addWalletTab() {
+//        Button update = new Button("update");
+//        walletPanel.add(update);
+        tabbedPane.addTab("Wallet", icon, walletPanel,
+                "Wallet Content");
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+//        update.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                walletPanel.makeWallet();
+//            }
+//        });
+    }
+
     //MODIFY: this
     //EFFECTS: reading the stored file
-    public void settingDataAfterLoading(UserProfileAndWallet userProfileAndWallet) {
+    public void settingDataAfterLoading() {
         stocksInWallet = userProfileAndWallet.getWallet();
         investment.setStocksInWallet(stocksInWallet);
         investment.setProfit(userProfileAndWallet.getProfit());
