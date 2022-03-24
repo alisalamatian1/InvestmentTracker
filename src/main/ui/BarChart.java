@@ -14,6 +14,7 @@ public class BarChart extends JPanel {
     private StocksInWallet stocksInWallet;
 
     public BarChart(StocksInWallet stocksInWallet) {
+        this.setLayout(null);
         this.stocksInWallet = stocksInWallet;
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBorder(BorderFactory.createLineBorder(Color.black));
@@ -23,23 +24,26 @@ public class BarChart extends JPanel {
     public void addStockLabels() {
         JLabel stockLabels = new JLabel("The stock tickers are:");
         this.add(stockLabels);
+        int widthGraphNoScaling = calculateNumOfGaps() + stocksInWallet.getStocks().size() + 2;
+        int widthBar = WIDTH / widthGraphNoScaling;
+        int dx = 2 * widthBar;
+        String tempName = stocksInWallet.getStocks().get(0).getStock().getTicker();
         for (PurchasedStock stocks : stocksInWallet.getStocks()) {
-            addJLabel(0, HEIGHT, stocks.getStock().getTicker());
+            if (!stocks.getStock().getTicker().equals(tempName)) {
+                tempName = stocks.getStock().getTicker();
+                dx += widthBar;
+            }
+            addJLabel(dx, widthBar, stocks.getStock().getTicker());
+            dx += widthBar;
         }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        // determine longest bar
-        System.out.println("I am called!!!!!");
-        // todo: adding the titles
-
-        // paint bars
         int maxHeight = calculateTheMaxHeight();
         System.out.println("max height: " + maxHeight);
         double maxHeightRatio =  ((double) HEIGHT) / maxHeight;
         System.out.println(" ratio : " + maxHeightRatio);
-        // todo: draw a line with the given width
         int widthGraphNoScaling = calculateNumOfGaps() + stocksInWallet.getStocks().size() + 2;
         int widthBar = WIDTH / widthGraphNoScaling;
         int dx = 2 * widthBar;
@@ -96,9 +100,9 @@ public class BarChart extends JPanel {
     }
     // todo: adding the labels at the right position and adding the axis labels
 
-    public void addJLabel(int dx, int dy, String name) {
+    public void addJLabel(int dx, int width, String name) {
         JLabel ticker = new JLabel(name);
-        ticker.setLocation(dx, dy);
+        ticker.setBounds(dx, Y_COORDINATE, width, 20);
         this.add(ticker);
     }
 }
