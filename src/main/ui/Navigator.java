@@ -328,6 +328,10 @@ public class Navigator {
         Boolean wasSuccessful = null;
         try {
             wasSuccessful = investment.sellingStocks(ticker, numberOfShares, price);
+            showMessage(wasSuccessful);
+            userProfileAndWallet.setProfit(investment.getProfit());
+            this.profit = investment.getProfit();
+            changeUserProfileAndWallet();
         } catch (NegativeShareSellingException e) {
             JOptionPane.showMessageDialog(tabPanel,
                     "please enter positive number of shares only.",
@@ -335,10 +339,6 @@ public class Navigator {
                     JOptionPane.ERROR_MESSAGE);
             System.out.println("please enter positive number of shares only.");
         }
-        showMessage(wasSuccessful);
-        userProfileAndWallet.setProfit(investment.getProfit());
-        this.profit = investment.getProfit();
-        changeUserProfileAndWallet();
     }
 
     // EFFECTS: show the corresponding message based on the success of the sell

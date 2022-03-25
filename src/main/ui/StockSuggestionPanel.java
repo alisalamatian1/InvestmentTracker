@@ -16,6 +16,8 @@ public class StockSuggestionPanel extends JPanel {
     // MODIFIES: this
     // EFFECTS: making the list of suggestions
     private void makeSuggestions() {
+        JLabel suggest = new JLabel("Here are some suggestions: ");
+        this.add(suggest);
         makeBalancedStocksList();
         makeConservativeList();
         makeRiskyList();
@@ -30,7 +32,7 @@ public class StockSuggestionPanel extends JPanel {
         JLabel balanced = new JLabel("balanced: ");
         this.add(balanced);
         for (Stock stock : balancedStocks) {
-            JLabel name = new JLabel(stock.getName() + "with the ticker" + stock.getTicker());
+            JLabel name = new JLabel(stock.getName() + " with the ticker " + stock.getTicker());
             this.add(name);
         }
     }
@@ -44,7 +46,7 @@ public class StockSuggestionPanel extends JPanel {
         JLabel conservative = new JLabel("conservative: ");
         this.add(conservative);
         for (Stock stock : conservativeStocks) {
-            JLabel name = new JLabel(stock.getName() + "with the ticker" + stock.getTicker());
+            JLabel name = new JLabel(stock.getName() + " with the ticker " + stock.getTicker());
             this.add(name);
         }
     }
@@ -58,7 +60,7 @@ public class StockSuggestionPanel extends JPanel {
         JLabel risky = new JLabel("risky: ");
         this.add(risky);
         for (Stock stock : riskyStocks) {
-            JLabel name = new JLabel(stock.getName() + "with the ticker" + stock.getTicker());
+            JLabel name = new JLabel(stock.getName() + " with the ticker " + stock.getTicker());
             this.add(name);
         }
     }
