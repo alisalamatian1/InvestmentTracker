@@ -2,68 +2,55 @@ package ui;
 
 import model.*;
 import model.exceptions.NegativeShareSellingException;
-import persistence.JsonReading;
 import persistence.JsonWriting;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
-//
 import javax.swing.JTabbedPane;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.io.FileNotFoundException;
 import java.util.Comparator;
-import java.util.List;
 
+// class for controlling the navigation system
 public class Navigator {
     private static final String JSON_STORAGE = "./data/";
-    MainWindow mainWindow;
-    JPanel mainPanel;
-    LoginPanel loginPanel;
+    private MainWindow mainWindow;
+    private JPanel mainPanel;
+    private LoginPanel loginPanel;
     private SignUpPanel signUpPanel;
     private JPanel startPanel;
-    StockSuggestionPanel stockSuggestionPanel;
-    WalletPanel walletPanel;
-    JPanel tabPanel;
-    CardLayout cl;
-    SellPanel sellPanel;
-    BuyPanel buyPanel;
-
-    boolean loginStatus;
-    private String typeOfInvestment;
+    private StockSuggestionPanel stockSuggestionPanel;
+    private WalletPanel walletPanel;
+    private JPanel tabPanel;
+    private CardLayout cl;
+    private SellPanel sellPanel;
+    private BuyPanel buyPanel;
+    private boolean loginStatus;
     private Investment investment = new Investment();
-    private java.util.List<Stock> balancedStocks;
-    private java.util.List<Stock> conservativeStocks;
-    private List<Stock> riskyStocks;
     private StocksInWallet stocksInWallet;
     private UserProfile userProfile;
     private UserProfileAndWallet userProfileAndWallet;
-    private final boolean isSignedUp = false;
-    private final boolean isLoggedIn = false;
     private JsonWriting jsonWriting;
-    private JsonReading jsonReading;
     private double profit;
-    Button save;
-    Button load;
-    Button logOut;
-    JTabbedPane tabbedPane;
-    ImageIcon icon;
-    BarChart chart;
+    private Button save;
+    private Button load;
+    private Button logOut;
+    private JTabbedPane tabbedPane;
+    private ImageIcon icon;
+    private BarChart chart;
 
+    // EFFECTS: constructing a navigator and initializing its panels
     public Navigator() {
         tabPanel = new JPanel();
         tabPanel.setLayout(new BorderLayout());
-
         JPanel left = new JPanel();
         left.setLayout(new GridLayout(10, 1, 2, 5));
         left.setBackground(Color.BLUE);
         makeMenuButtons(left);
-
         tabPanel.add(left, BorderLayout.WEST);
         mainWindow = new MainWindow();
         startPanel = new JPanel();
@@ -79,7 +66,7 @@ public class Navigator {
         mainPanel.add(tabPanel, "tabPanel");
         mainPanel.add(stockSuggestionPanel, "stock");
         cl.show(mainPanel, "start");
-        navigate();
+        initialize();
     }
 
     // MODIFIES: this
@@ -102,6 +89,8 @@ public class Navigator {
         handleLogOutButton();
     }
 
+    // MODIFIES: this
+    // EFFECTS: handling the action of the logout button
     private void handleLogOutButton() {
         logOut.addActionListener(new ActionListener() {
             @Override
@@ -111,6 +100,8 @@ public class Navigator {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: handling the action of the load button
     private void handleLoadButton() {
         load.addActionListener(new ActionListener() {
             @Override
@@ -122,6 +113,8 @@ public class Navigator {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: handling the action of the save button
     private void handleSaveButton() {
         save.addActionListener(new ActionListener() {
             @Override
@@ -135,18 +128,20 @@ public class Navigator {
         });
     }
 
-    public void navigate() {
+    // MODIFIES: this
+    // EFFECTS: adding the main panel to the frame and adding the essential buttons
+    public void initialize() {
         mainWindow.add(mainPanel);
         addLoggingButton();
         addSigningButton();
         addNextButton();
     }
 
-
+    // MODIFIES: this
+    // EFFECTS: making a tab panel with options to log in or sign in
     private void makeTabbedStartPage() {
         JTabbedPane tabbedPane = new JTabbedPane();
         ImageIcon icon = new ImageIcon();
-
         tabbedPane.addTab("Sign up", icon, signUpPanel,
                 "Signing up");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
@@ -158,7 +153,7 @@ public class Navigator {
     }
 
     // MODIFIES: this
-    // EFFECTS: creates a login button
+    // EFFECTS: creates a login button and handles the corresponding action
     public void addLoggingButton() {
         JButton loginButton = new JButton("login");
         loginButton.setBounds(10, 80, 80, 25);
@@ -184,7 +179,7 @@ public class Navigator {
     }
 
     // MODIFIES: this
-    // EFFECTS: creates a signup button
+    // EFFECTS: creates a signup button and handles the corresponding action
     public void addSigningButton() {
         JButton signUpButton = new JButton("sign up");
         signUpButton.setBounds(10, 80, 80, 25);
@@ -205,7 +200,7 @@ public class Navigator {
     }
 
     // MODIFY: this
-    // EFFECT: adding the next button for stockSuggestion Panel
+    // EFFECT: adding the next button for stockSuggestion Panel and handles the corresponding action
     private void addNextButton() {
         JButton start = new JButton("Start investing!");
         stockSuggestionPanel.add(start);
@@ -220,6 +215,9 @@ public class Navigator {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: making the main page tab panel with the options:
+    // wallet, sell, buy, and barchart
     public void setUpTabPanel(String namePanel) {
         tabbedPane = new JTabbedPane();
         icon = new ImageIcon();
@@ -231,16 +229,19 @@ public class Navigator {
         sortStocks();
         chart = new BarChart(stocksInWallet);
         addBarChartTab();
-    }
-
-    private void addBarChartTab() {
-        //chart.addStockLabels();
-        tabbedPane.addTab("Bar Chart", icon, chart,
-                "Asset Allocation Bar Chart");
-        tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
         tabPanel.add(tabbedPane, BorderLayout.CENTER);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adding the bar chart panel to tabbedPane
+    private void addBarChartTab() {
+        tabbedPane.addTab("Bar Chart", icon, chart,
+                "Asset Allocation Bar Chart");
+        tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sorting the stocks so the same stocks come together
     private void sortStocks() {
         stocksInWallet.getStocks().sort(new Comparator<PurchasedStock>() {
             @Override
@@ -253,6 +254,8 @@ public class Navigator {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: adding the buy panel to tabbedPane
     private void addBuyTab() {
         JButton buyButton = buyPanel.getBuyButton();
         buyButton.addActionListener(new ActionListener() {
@@ -267,6 +270,8 @@ public class Navigator {
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adding the sell panel to tabbedPane
     private void addSellTab() {
         JButton sellButton = sellPanel.getSellButton();
         sellButton.addActionListener(new ActionListener() {
@@ -280,6 +285,8 @@ public class Navigator {
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adding the wallet panel to tabbedPane
     private void addWalletTab() {
         Button update = new Button("update");
         walletPanel.add(update, BorderLayout.WEST);
@@ -294,7 +301,7 @@ public class Navigator {
         });
     }
 
-    //MODIFY: this
+    //MODIFIES: this
     //EFFECTS: reading the stored file
     public void settingDataAfterLoading() {
         stocksInWallet = userProfileAndWallet.getWallet();
@@ -304,13 +311,16 @@ public class Navigator {
         userProfile = userProfileAndWallet.getProfile();
     }
 
+    // MODIFIES: this
+    // EFFECTS: setting the necessary info after sign up
     public void setDataAfterSignUp() {
         userProfileAndWallet = signUpPanel.loadData();
         userProfile = userProfileAndWallet.getProfile();
         stocksInWallet = new StocksInWallet();
-
     }
 
+    // MODIFIES: this
+    // EFFECTS: selling the stocks based on the inputted ticker and number of shares
     public void sellingStock() {
         String ticker = sellPanel.getTicker().getText();
         int numberOfShares = Integer.parseInt(sellPanel.getNumSharesText().getText());
@@ -331,6 +341,7 @@ public class Navigator {
         changeUserProfileAndWallet();
     }
 
+    // EFFECTS: show the corresponding message based on the success of the sell
     private void showMessage(Boolean wasSuccessful) {
         if (!wasSuccessful) {
             JOptionPane.showMessageDialog(tabPanel,
@@ -352,6 +363,8 @@ public class Navigator {
         userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);
     }
 
+    // MODIFIES: this
+    // EFFECTS: saving the user info and writing that into the database
     public void saveUserInfo() throws FileNotFoundException {
         jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userProfile.getUserName()
                 + userProfile.getPassword() + ".json");
@@ -360,6 +373,8 @@ public class Navigator {
         jsonWriting.close();
     }
 
+    // MODIFIES: this
+    // EFFECTS: buying stocks based on the entered ticker and number of shares
     public void buyingStocks() {
         String ticker = buyPanel.getTicker().getText();
         int numberOfShares = Integer.parseInt(buyPanel.getNumSharesText().getText());
@@ -373,9 +388,9 @@ public class Navigator {
                 "Success",
                 JOptionPane.INFORMATION_MESSAGE);
     }
-
 }
-// resources: https://github.com/BranislavLazic/SwingTutorials/blob/master/src/main/java/CardLayoutTutorial.java for cardLayout
+// Used resources:
+// https://github.com/BranislavLazic/SwingTutorials/blob/master/src/main/java/CardLayoutTutorial.java for cardLayout
 // error message from https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#features
-// tabbedpanel from https://docs.oracle.com/javase/tutorial/uiswing/components/tabbedpane.html
+// tabbedPanel from https://docs.oracle.com/javase/tutorial/uiswing/components/tabbedpane.html
 

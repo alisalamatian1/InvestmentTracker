@@ -1,20 +1,19 @@
 package ui;
 
-import model.UserProfileAndWallet;
 import persistence.JsonReading;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+// class representing the login panel
 public class LoginPanel extends EnterPanel {
 
+    // EFFECTS: constructing loginPanel
     public LoginPanel() {
         super();
     }
 
+    // MODIFIES: this
+    // EFFECTS: Checks if the profile exists or not
     public boolean checkForProfile() {
         String userName = userText.getText();
         String password = passwordText.getText();
@@ -24,7 +23,6 @@ public class LoginPanel extends EnterPanel {
         }
         return false;
     }
-
 
     // EFFECTS: checks if the userName with the given password exists by checking file path
     public Boolean checkFileExists(String path) {

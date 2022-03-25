@@ -1,10 +1,8 @@
 package ui;
 
-import model.UserProfile;
-
+// Main class
 public class Main {
     public static void main(String[] args) {
-        // new UserInteraction();
         new Navigator();
     }
 }

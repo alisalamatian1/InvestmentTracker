@@ -6,7 +6,7 @@ import model.StocksInWallet;
 import javax.swing.*;
 import java.awt.*;
 
-
+// this class represent a barchart
 public class BarChart extends JPanel {
     private static final int HEIGHT = 600;
     private static final int WIDTH = 600;
@@ -17,6 +17,7 @@ public class BarChart extends JPanel {
     private final JLabel stockLabels;
     private boolean loaded = false;
 
+    // EFFECTS: constructing a barchart based on the stocks owned by user
     public BarChart(StocksInWallet stocksInWallet) {
         this.setLayout(null);
         this.stocksInWallet = stocksInWallet;
@@ -26,15 +27,19 @@ public class BarChart extends JPanel {
         setBorder(BorderFactory.createLineBorder(Color.black));
     }
 
-    public void addStockLabels() {
+    // MODIFIES: this
+    // EFFECTS: adding the ticker of stocks at the end of the barchart
+    private void addStockLabels() {
         label = "labels: ";
         for (PurchasedStock stocks : stocksInWallet.getStocks()) {
             label += " " + stocks.getStock().getTicker();
         }
-        setTextLabel();
+        stockLabels.setText(label);
         stockLabels.setBounds(10, Y_COORDINATE + 5, WIDTH, 20);
     }
 
+    // MODIFIES: this
+    // EFFECTS: drawing the barchart and the axis and calling addStockLabels
     @Override
     protected void paintComponent(Graphics g) {
         if (loaded) {
@@ -51,6 +56,8 @@ public class BarChart extends JPanel {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: drawing each of the bars, representing stocks
     private void loopAndDraw(Graphics g, double maxHeightRatio, int widthBar, int dx, String tempName) {
         for (PurchasedStock stocks : stocksInWallet.getStocks()) {
             Double value = stocks.getNumber() * stocks.getPrice();
@@ -68,6 +75,8 @@ public class BarChart extends JPanel {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: adding the axis
     private void drawLines(Graphics g, int widthBar) {
         if (!stocksInWallet.getStocks().isEmpty()) {
             g.drawLine(widthBar, Y_COORDINATE + 1, X_2_LINE, Y_COORDINATE);
@@ -75,6 +84,7 @@ public class BarChart extends JPanel {
         }
     }
 
+    // EFFECTS: calculating how many gaps between the stocks are needed
     private int calculateNumOfGaps() {
         int numOfGaps = -1;
         String tempName = "";
@@ -88,6 +98,7 @@ public class BarChart extends JPanel {
         return numOfGaps;
     }
 
+    // EFFECTS: calculating the stock with most high value
     public int calculateTheMaxHeight() {
         int max = Integer.MIN_VALUE;
         for (PurchasedStock stock : stocksInWallet.getStocks()) {
@@ -97,6 +108,8 @@ public class BarChart extends JPanel {
         return max;
     }
 
+    // MODIFIES: this
+    // EFFECTS: drawing the bars based on their location width and height
     public void drawTheBar(Graphics g, int dx, int widthBar, int height) {
         g.setColor(Color.PINK);
         g.fillRect(dx, Y_COORDINATE - height, widthBar, height);
@@ -104,11 +117,8 @@ public class BarChart extends JPanel {
         g.drawRect(dx, Y_COORDINATE - height, widthBar, height);
     }
 
-    public void setTextLabel() {
-        System.out.println(label);
-        stockLabels.setText(label);
-    }
-
+    // MODIFIES: this
+    // EFFECTS: setting the state of loaded
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
     }

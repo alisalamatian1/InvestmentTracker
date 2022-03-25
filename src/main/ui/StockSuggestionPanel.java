@@ -3,17 +3,17 @@ package ui;
 import model.Stock;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 
+// class representing the stock suggestion page
 public class StockSuggestionPanel extends JPanel {
-    private ArrayList<ArrayList<Stock>> suggestion;
 
+    // EFFECTS: constructing a stock suggestion panel
     public StockSuggestionPanel() {
-        suggestion = new ArrayList<>();
         makeSuggestions();
     }
 
+    // MODIFIES: this
     // EFFECTS: making the list of suggestions
     private void makeSuggestions() {
         makeBalancedStocksList();
@@ -21,8 +21,9 @@ public class StockSuggestionPanel extends JPanel {
         makeRiskyList();
     }
 
+    // MODIFIES: this
     // EFFECTS: making and displaying a list of balanced stocks
-    public void makeBalancedStocksList() {
+    private void makeBalancedStocksList() {
         ArrayList<Stock> balancedStocks = new ArrayList<Stock>();
         balancedStocks.add(new Stock("Vanguard S&P 500 Index ETF", "VFV"));
         balancedStocks.add(new Stock("Vanguard Balanced ETF Portfolio", "VBAL"));
@@ -34,8 +35,9 @@ public class StockSuggestionPanel extends JPanel {
         }
     }
 
-    // EFFECTS: making a list of conservative stocks
-    public void makeConservativeList() {
+    // MODIFIES: this
+    // EFFECTS: making a list of conservative stocks and adding it to the panel
+    private void makeConservativeList() {
         ArrayList<Stock> conservativeStocks = new ArrayList<Stock>();
         conservativeStocks.add(new Stock("Vanguard Conservative ETF Portfolio", "VCNS"));
         conservativeStocks.add(new Stock("iShares Core Conservative Balanced ETF Portfolio", "XCNS"));
@@ -47,7 +49,9 @@ public class StockSuggestionPanel extends JPanel {
         }
     }
 
-    public void makeRiskyList() {
+    // MODIFIES: this
+    // EFFECTS: making a list of risky stocks and adding it to the panel
+    private void makeRiskyList() {
         ArrayList<Stock> riskyStocks = new ArrayList<Stock>();
         riskyStocks.add(new Stock("ProShares Ultra S&P500", "SSO"));
         riskyStocks.add(new Stock("ProShares UltraPro QQQ", "TQQQ"));

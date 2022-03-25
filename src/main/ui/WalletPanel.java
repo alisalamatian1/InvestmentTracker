@@ -2,13 +2,11 @@ package ui;
 
 import model.PurchasedStock;
 import model.StocksInWallet;
-import persistence.JsonReading;
-
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.List;
 
+// class representing a page showing the wallet content
 // Used the following to learn JList:
 //https://docs.oracle.com/javase/tutorial/displayCode.html?code=https://docs.oracle.com/javase/tutorial/uiswing/examples/components/ListDemoProject/src/components/ListDemo.java
 public class WalletPanel extends JPanel {
@@ -16,6 +14,7 @@ public class WalletPanel extends JPanel {
     private JList list;
     private DefaultListModel listModel;
 
+    // EFFECTS: constructing the wallet panel based on the stocks in wallet
     public WalletPanel(StocksInWallet stocks) {
         super(new BorderLayout());
         listModel = new DefaultListModel();

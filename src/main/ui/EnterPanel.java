@@ -6,18 +6,21 @@ import persistence.JsonReading;
 import javax.swing.*;
 import java.io.IOException;
 
+// abstract class representing common methods of starting panels
 public abstract class EnterPanel extends JPanel {
     protected JTextField userText;
     protected JPasswordField passwordText;
     protected JsonReading jsonReading;
     protected static final String JSON_STORAGE = "./data/";
 
+    // EFFECTS: constructing a starting page with username and password
     public EnterPanel() {
         initializeUserName();
         initializePassword();
     }
 
-
+    // MODIFIES: this
+    // EFFECTS: making a userName text
     private void initializeUserName() {
         JLabel userLabel = new JLabel("User");
         userLabel.setBounds(10,20,80,25);
@@ -27,6 +30,8 @@ public abstract class EnterPanel extends JPanel {
         this.add(userText);
     }
 
+    // MODIFIES: this
+    // EFFECTS: making password text
     private void initializePassword() {
         JLabel passwordLabel = new JLabel("Password");
         passwordLabel.setBounds(10,50,80,25);
@@ -37,6 +42,8 @@ public abstract class EnterPanel extends JPanel {
     }
 
     // REQUIRES: jsonReading not to be null
+    // MODIFIES: this
+    // EFFECTS: loading data from database
     public UserProfileAndWallet loadData() {
         jsonReading = new JsonReading(JSON_STORAGE + "/" + userText.getText()
                + passwordText.getText() + ".json");
