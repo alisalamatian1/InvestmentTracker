@@ -38,12 +38,16 @@ public abstract class EnterPanel extends JPanel {
 
     // REQUIRES: jsonReading not to be null
     public UserProfileAndWallet loadData() {
+        jsonReading = new JsonReading(JSON_STORAGE + "/" + userText.getText()
+               + passwordText.getText() + ".json");
         UserProfileAndWallet userProfileAndWallet = null;
         try {
             userProfileAndWallet = jsonReading.read();
         } catch (IOException e) {
-            // todo: throw an error
-            System.out.println("Sorry we cannot find you in the system");
+            JOptionPane.showMessageDialog(this,
+                    "Sorry we cannot find you in the system",
+                    "Not found",
+                    JOptionPane.ERROR_MESSAGE);
         }
         return userProfileAndWallet;
     }

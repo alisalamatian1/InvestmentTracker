@@ -23,7 +23,6 @@ public class WalletPanel extends JPanel {
         JScrollPane listScrollPane = new JScrollPane(list);
         add(listScrollPane, BorderLayout.CENTER);
         this.stocksInWallet = stocks;
-        makeWallet();
     }
 
     // MODIFIES: this

@@ -45,7 +45,7 @@ public class JsonReading {
     private UserProfileAndWallet parseUserProfileAndWallet() {
         String password = matchFinder("password\":\"([0-9]*)");
         String username = matchFinder("username\":\"([a-zA-Z]*)");
-        String profitString = matchFinder("profit\":([0-9]*)");
+        String profitString = matchFinder("profit\":(-?[0-9]*)");
         double profit = Double.parseDouble(profitString);
         ArrayList<String> tickers = matchFinderArray("ticker\":\"([a-zA-Z]*)");
         ArrayList<String> numbers = matchFinderArray("number\":([0-9]+)");

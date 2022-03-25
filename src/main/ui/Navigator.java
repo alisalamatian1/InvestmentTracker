@@ -53,6 +53,7 @@ public class Navigator {
     Button logOut;
     JTabbedPane tabbedPane;
     ImageIcon icon;
+    BarChart chart;
 
     public Navigator() {
         tabPanel = new JPanel();
@@ -96,27 +97,40 @@ public class Navigator {
     // MODIFIES: this
     // EFFECTS: setting up the actions of each button
     private void setActions() {
+        handleSaveButton();
+        handleLoadButton();
+        handleLogOutButton();
+    }
+
+    private void handleLogOutButton() {
+        logOut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
+    private void handleLoadButton() {
+        load.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                walletPanel.makeWallet();
+                chart.setLoaded(true);
+                settingDataAfterLoading();
+            }
+        });
+    }
+
+    private void handleSaveButton() {
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     saveUserInfo();
                 } catch (FileNotFoundException ex) {
-                    // todo: add an error
+                    System.out.println("file not found!");
                 }
-            }
-        });
-        load.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                settingDataAfterLoading();
-            }
-        });
-
-        logOut.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
             }
         });
     }
@@ -154,8 +168,6 @@ public class Navigator {
             public void actionPerformed(ActionEvent e) {
                 loginStatus = loginPanel.checkForProfile();
                 if (loginStatus) {
-                    System.out.println("I am here in if");
-                    // todo: add a panel to ask for loadingData
                     userProfileAndWallet = loginPanel.loadData();
                     settingDataAfterLoading();
                     walletPanel = new WalletPanel(stocksInWallet);
@@ -183,9 +195,10 @@ public class Navigator {
                 try {
                     signUpPanel.saveUserInfo();
                 } catch (FileNotFoundException ex) {
-                    // todo: throw an error
+                    System.out.println("file not found");
                 }
                 setDataAfterSignUp();
+                walletPanel = new WalletPanel(stocksInWallet);
                 cl.show(mainPanel, "stock");
             }
         });
@@ -210,22 +223,37 @@ public class Navigator {
     public void setUpTabPanel(String namePanel) {
         tabbedPane = new JTabbedPane();
         icon = new ImageIcon();
-
         addWalletTab();
-
         sellPanel = new SellPanel();
-        JButton sellButton = sellPanel.getSellButton();
-        sellButton.addActionListener(new ActionListener() {
+        addSellTab();
+        buyPanel = new BuyPanel();
+        addBuyTab();
+        sortStocks();
+        chart = new BarChart(stocksInWallet);
+        addBarChartTab();
+    }
+
+    private void addBarChartTab() {
+        //chart.addStockLabels();
+        tabbedPane.addTab("Bar Chart", icon, chart,
+                "Asset Allocation Bar Chart");
+        tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
+        tabPanel.add(tabbedPane, BorderLayout.CENTER);
+    }
+
+    private void sortStocks() {
+        stocksInWallet.getStocks().sort(new Comparator<PurchasedStock>() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                sellingStock();
+            public int compare(PurchasedStock o1, PurchasedStock o2) {
+                if (o1.getStock().getTicker().equals(o2.getStock().getTicker())) {
+                    return 0;
+                }
+                return o1.getStock().getTicker().compareTo(o2.getStock().getTicker());
             }
         });
-        tabbedPane.addTab("Sell", icon, sellPanel,
-                "Selling Stocks");
-        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+    }
 
-        buyPanel = new BuyPanel();
+    private void addBuyTab() {
         JButton buyButton = buyPanel.getBuyButton();
         buyButton.addActionListener(new ActionListener() {
             @Override
@@ -237,41 +265,33 @@ public class Navigator {
         tabbedPane.addTab("Buy", icon, buyPanel,
                 "Buying Stocks");
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
+    }
 
-        //panel4.setPreferredSize(new Dimension(410, 50));
-
-        stocksInWallet.getStocks().sort(new Comparator<PurchasedStock>() {
+    private void addSellTab() {
+        JButton sellButton = sellPanel.getSellButton();
+        sellButton.addActionListener(new ActionListener() {
             @Override
-            public int compare(PurchasedStock o1, PurchasedStock o2) {
-                if (o1.getStock().getTicker().equals(o2.getStock().getTicker())) {
-                    return 0;
-                }
-                return o1.getStock().getTicker().compareTo(o2.getStock().getTicker());
+            public void actionPerformed(ActionEvent e) {
+                sellingStock();
             }
         });
-
-        if (namePanel.equals("login")) {
-            BarChart chart = new BarChart(stocksInWallet);
-            tabbedPane.addTab("Bar Chart", icon, chart,
-                    "Asset Allocation Bar Chart");
-            tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
-        }
-        //Add the tabbed pane to this panel.
-        tabPanel.add(tabbedPane, BorderLayout.CENTER);
+        tabbedPane.addTab("Sell", icon, sellPanel,
+                "Selling Stocks");
+        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
     }
 
     private void addWalletTab() {
-//        Button update = new Button("update");
-//        walletPanel.add(update);
+        Button update = new Button("update");
+        walletPanel.add(update, BorderLayout.WEST);
         tabbedPane.addTab("Wallet", icon, walletPanel,
                 "Wallet Content");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-//        update.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                walletPanel.makeWallet();
-//            }
-//        });
+        update.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                walletPanel.makeWallet();
+            }
+        });
     }
 
     //MODIFY: this
@@ -285,7 +305,10 @@ public class Navigator {
     }
 
     public void setDataAfterSignUp() {
+        userProfileAndWallet = signUpPanel.loadData();
+        userProfile = userProfileAndWallet.getProfile();
         stocksInWallet = new StocksInWallet();
+
     }
 
     public void sellingStock() {
@@ -296,24 +319,32 @@ public class Navigator {
         try {
             wasSuccessful = investment.sellingStocks(ticker, numberOfShares, price);
         } catch (NegativeShareSellingException e) {
-            // todo: add an error here
+            JOptionPane.showMessageDialog(tabPanel,
+                    "please enter positive number of shares only.",
+                    "Invalid number of shares",
+                    JOptionPane.ERROR_MESSAGE);
             System.out.println("please enter positive number of shares only.");
         }
-        if (!wasSuccessful) {
-            // todo: add an error here
-            System.out.println("Insufficient funding! Please look at the listed stocks you have and try again!");
-        }
+        showMessage(wasSuccessful);
         userProfileAndWallet.setProfit(investment.getProfit());
         this.profit = investment.getProfit();
         changeUserProfileAndWallet();
-        try {
-            // todo: add an option to save the data
-            saveUserInfo();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+    }
+
+    private void showMessage(Boolean wasSuccessful) {
+        if (!wasSuccessful) {
+            JOptionPane.showMessageDialog(tabPanel,
+                    "Insufficient funding! Please look at the listed stocks you have and try again!",
+                    "Insufficient funding",
+                    JOptionPane.ERROR_MESSAGE);
+            System.out.println("Insufficient funding! Please look at the listed stocks you have and try again!");
+        } else {
+            JOptionPane.showMessageDialog(tabPanel,
+                    "Successful sell",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
-    // todo: make a button, so it refreshes the wallet content on change
 
     // MODIFIES: this
     // EFFECT: changing userProfileAndWallet when user changes their StocksInWallet
@@ -334,40 +365,16 @@ public class Navigator {
         int numberOfShares = Integer.parseInt(buyPanel.getNumSharesText().getText());
         double price = Double.parseDouble(buyPanel.getPriceText().getText());
         Stock purchasingStock = new Stock(ticker);
-        // todo: check if the next line is necessary
         investment.setStocksInWallet(stocksInWallet);
         stocksInWallet = investment.buyingStocks(purchasingStock, numberOfShares, price);
         changeUserProfileAndWallet();
-        try {
-            // todo: add an option to save the data
-            saveUserInfo();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        JOptionPane.showMessageDialog(tabPanel,
+                "Successful buy",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
     }
-    // todo: JList for the first tab
 
 }
-// combo box, not used in the tradeClass:
-//
-//    private void makeSellAndBuyOption() {
-//        cb.setEditable(true);
-//        cb.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                JComboBox comboBox = (JComboBox) e.getSource();
-//                Object selected = comboBox.getSelectedItem();
-//                if (selected.toString().equals("buy")) {
-//                    System.out.println("we are inside buy");
-//                } else {
-//                    System.out.println(" we are inside sell");
-//                    cl.show(mainPanel, "sell");
-//                    System.out.println("still in sell");
-//                }
-//            }
-//        });
-//    }
-
 // resources: https://github.com/BranislavLazic/SwingTutorials/blob/master/src/main/java/CardLayoutTutorial.java for cardLayout
 // error message from https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html#features
 // tabbedpanel from https://docs.oracle.com/javase/tutorial/uiswing/components/tabbedpane.html
