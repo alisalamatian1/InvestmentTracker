@@ -90,11 +90,13 @@ public class Navigator {
     }
 
     // MODIFIES: this
-    // EFFECTS: handling the action of the logout button
+    // EFFECTS: handling the action of the logout button and printing the log
     private void handleLogOutButton() {
         logOut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                LogPrinter lp = new LogPrinter();
+                lp.printLog(EventLog.getInstance());
                 System.exit(0);
             }
         });
@@ -261,7 +263,6 @@ public class Navigator {
         buyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("we are inside buying");
                 buyingStocks();
             }
         });
@@ -337,7 +338,6 @@ public class Navigator {
                     "please enter positive number of shares only.",
                     "Invalid number of shares",
                     JOptionPane.ERROR_MESSAGE);
-            System.out.println("please enter positive number of shares only.");
         }
     }
 
@@ -348,7 +348,6 @@ public class Navigator {
                     "Insufficient funding! Please look at the listed stocks you have and try again!",
                     "Insufficient funding",
                     JOptionPane.ERROR_MESSAGE);
-            System.out.println("Insufficient funding! Please look at the listed stocks you have and try again!");
         } else {
             JOptionPane.showMessageDialog(tabPanel,
                     "Successful sell",

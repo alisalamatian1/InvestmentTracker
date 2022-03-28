@@ -27,7 +27,15 @@ public class Investment {
             throw new NegativeShareSellingException();
         }
         this.sellingPrice = sellingPrice;
-        return findingTheStockInWalletAndReducing(numberOfToSellShares, tickerSoldStock);
+        boolean isSellPossible = findingTheStockInWalletAndReducing(numberOfToSellShares, tickerSoldStock);
+        if (isSellPossible) {
+            EventLog.getInstance().logEvent(new Event("selling " + numberOfToSellShares + " " + tickerSoldStock
+                    + " with the price of " + sellingPrice));
+        } else {
+            EventLog.getInstance().logEvent(new Event("unsuccessful attempt to sell " + numberOfToSellShares
+                    + " " + tickerSoldStock + " with the price of " + sellingPrice));
+        }
+        return isSellPossible;
     }
 
     // EFFECT: finding the stocks in the wallet and reducing the number of owned shares by the wanted amount
@@ -117,6 +125,8 @@ public class Investment {
     public StocksInWallet buyingStocks(Stock stock, int number, double price) {
         purchasedStock = new PurchasedStock(stock,number,price);
         stocksInWallet.addPurchasedStock(purchasedStock);
+        EventLog.getInstance().logEvent(new Event("buying " + number + " shares of the " + stock.getTicker()
+                                                            + " stock with the price of " + price));
         return stocksInWallet;
     }
 
