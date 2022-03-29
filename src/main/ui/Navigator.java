@@ -110,6 +110,7 @@ public class Navigator {
             public void actionPerformed(ActionEvent e) {
                 walletPanel.makeWallet();
                 chart.setLoaded(true);
+                chart.addStockLabels();
                 settingDataAfterLoading();
             }
         });
@@ -232,6 +233,14 @@ public class Navigator {
         chart = new BarChart(stocksInWallet);
         addBarChartTab();
         tabPanel.add(tabbedPane, BorderLayout.CENTER);
+        addObservers();
+    }
+
+    // MODIFIES: Investment
+    // EFFECTS: adding chart and wallet panels to the list of observers in investment
+    private void addObservers() {
+        investment.addObserver(walletPanel);
+        investment.addObserver(chart);
     }
 
     // MODIFIES: this
@@ -289,17 +298,9 @@ public class Navigator {
     // MODIFIES: this
     // EFFECTS: adding the wallet panel to tabbedPane
     private void addWalletTab() {
-        Button update = new Button("update");
-        walletPanel.add(update, BorderLayout.WEST);
         tabbedPane.addTab("Wallet", icon, walletPanel,
                 "Wallet Content");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-        update.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                walletPanel.makeWallet();
-            }
-        });
     }
 
     //MODIFIES: this

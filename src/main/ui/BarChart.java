@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 // this class represent a barchart
-public class BarChart extends JPanel {
+public class BarChart extends JPanel implements Observer {
     private static final int HEIGHT = 600;
     private static final int WIDTH = 600;
     private static final int Y_COORDINATE = HEIGHT - 10;
@@ -29,7 +29,7 @@ public class BarChart extends JPanel {
 
     // MODIFIES: this
     // EFFECTS: adding the ticker of stocks at the end of the barchart
-    private void addStockLabels() {
+    public void addStockLabels() {
         label = "labels: ";
         for (PurchasedStock stocks : stocksInWallet.getStocks()) {
             label += " " + stocks.getStock().getTicker();
@@ -43,7 +43,6 @@ public class BarChart extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         if (loaded) {
-            addStockLabels();
             System.out.println("running well");
             int maxHeight = calculateTheMaxHeight();
             double maxHeightRatio = ((double) HEIGHT) / maxHeight;
@@ -121,5 +120,11 @@ public class BarChart extends JPanel {
     // EFFECTS: setting the state of loaded
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
+    }
+
+    // EFFECTS: calling the addLabels whenever subjects changes
+    @Override
+    public void update() {
+        addStockLabels();
     }
 }

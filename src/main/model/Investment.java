@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 
 // This class provides functionality to buy and sell stocks
-public class Investment {
+public class Investment extends Subject {
     private PurchasedStock purchasedStock;
     private StocksInWallet stocksInWallet = new StocksInWallet();
     private ArrayList<PurchasedStock> needToRemove = new ArrayList<>();
@@ -33,6 +33,7 @@ public class Investment {
         if (isSellPossible) {
             EventLog.getInstance().logEvent(new Event("selling " + numberOfToSellShares + " " + tickerSoldStock
                     + " with the price of " + sellingPrice));
+            notifyAllObserver();
         } else {
             EventLog.getInstance().logEvent(new Event("unsuccessful attempt to sell " + numberOfToSellShares
                     + " " + tickerSoldStock + " with the price of " + sellingPrice));
@@ -129,6 +130,7 @@ public class Investment {
         stocksInWallet.addPurchasedStock(purchasedStock);
         EventLog.getInstance().logEvent(new Event("buying " + number + " shares of the " + stock.getTicker()
                                                             + " stock with the price of " + price));
+        notifyAllObserver();
         return stocksInWallet;
     }
 

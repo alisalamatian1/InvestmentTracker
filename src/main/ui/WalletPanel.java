@@ -9,7 +9,7 @@ import java.util.List;
 // class representing a page showing the wallet content
 // Used the following to learn JList:
 //https://docs.oracle.com/javase/tutorial/displayCode.html?code=https://docs.oracle.com/javase/tutorial/uiswing/examples/components/ListDemoProject/src/components/ListDemo.java
-public class WalletPanel extends JPanel {
+public class WalletPanel extends JPanel implements Observer {
     private StocksInWallet stocksInWallet;
     private JList list;
     private DefaultListModel listModel;
@@ -35,5 +35,11 @@ public class WalletPanel extends JPanel {
                     + " with the value of: " + stock.getPrice() * stock.getNumber());
         }
 
+    }
+
+    // EFFECTS: updating the list of owned stocks whenever the subject is changed
+    @Override
+    public void update() {
+        makeWallet();
     }
 }
