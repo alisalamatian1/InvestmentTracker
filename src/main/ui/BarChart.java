@@ -43,7 +43,6 @@ public class BarChart extends JPanel implements Observer {
     @Override
     protected void paintComponent(Graphics g) {
         if (loaded) {
-            System.out.println("running well");
             int maxHeight = calculateTheMaxHeight();
             double maxHeightRatio = ((double) HEIGHT) / maxHeight;
             int numStocksAndGaps = calculateNumOfGaps() + stocksInWallet.getStocks().size() + 2;

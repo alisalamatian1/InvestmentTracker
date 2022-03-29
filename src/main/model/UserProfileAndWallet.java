@@ -17,13 +17,6 @@ public class UserProfileAndWallet {
         this.wallet = stocks;
     }
 
-    // MODIFY: this
-    // EFFECT: adding the given user profile and stocks to the list of associated wallets
-    public void setAssociatedWallets(UserProfile profile, StocksInWallet stocks) {
-        this.profile = profile;
-        this.wallet = stocks;
-    }
-
     public StocksInWallet getWallet() {
         return wallet;
     }
@@ -34,6 +27,10 @@ public class UserProfileAndWallet {
 
     public void setProfit(double profit) {
         this.profit = profit;
+    }
+
+    public void setWallet(StocksInWallet wallet) {
+        this.wallet = wallet;
     }
 
     public double getProfit() {

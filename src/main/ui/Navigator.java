@@ -32,7 +32,6 @@ public class Navigator {
     private boolean loginStatus;
     private Investment investment = new Investment();
     private StocksInWallet stocksInWallet;
-    private UserProfile userProfile;
     private UserProfileAndWallet userProfileAndWallet;
     private JsonWriting jsonWriting;
     private double profit;
@@ -122,6 +121,7 @@ public class Navigator {
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                changeUserProfileAndWallet();
                 try {
                     saveUserInfo();
                 } catch (FileNotFoundException ex) {
@@ -310,14 +310,12 @@ public class Navigator {
         investment.setStocksInWallet(stocksInWallet);
         investment.setProfit(userProfileAndWallet.getProfit());
         this.profit = userProfileAndWallet.getProfit();
-        userProfile = userProfileAndWallet.getProfile();
     }
 
     // MODIFIES: this
     // EFFECTS: setting the necessary info after sign up
     public void setDataAfterSignUp() {
         userProfileAndWallet = signUpPanel.loadData();
-        userProfile = userProfileAndWallet.getProfile();
         stocksInWallet = new StocksInWallet();
     }
 
@@ -332,7 +330,6 @@ public class Navigator {
             showMessage(wasSuccessful);
             userProfileAndWallet.setProfit(investment.getProfit());
             this.profit = investment.getProfit();
-            changeUserProfileAndWallet();
         } catch (NegativeShareSellingException e) {
             JOptionPane.showMessageDialog(tabPanel,
                     "please enter positive number of shares only.",
@@ -359,14 +356,14 @@ public class Navigator {
     // MODIFIES: this
     // EFFECT: changing userProfileAndWallet when user changes their StocksInWallet
     public void changeUserProfileAndWallet() {
-        userProfileAndWallet.setAssociatedWallets(userProfile, stocksInWallet);
+        userProfileAndWallet.setWallet(stocksInWallet);
     }
 
     // MODIFIES: this
     // EFFECTS: saving the user info and writing that into the database
     public void saveUserInfo() throws FileNotFoundException {
-        jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userProfile.getUserName()
-                + userProfile.getPassword() + ".json");
+        jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userProfileAndWallet.getProfile().getUserName()
+                + userProfileAndWallet.getProfile().getPassword() + ".json");
         jsonWriting.open();
         jsonWriting.write(userProfileAndWallet);
         jsonWriting.close();
@@ -381,7 +378,6 @@ public class Navigator {
         Stock purchasingStock = new Stock(ticker);
         investment.setStocksInWallet(stocksInWallet);
         stocksInWallet = investment.buyingStocks(purchasingStock, numberOfShares, price);
-        changeUserProfileAndWallet();
         JOptionPane.showMessageDialog(tabPanel,
                 "Successful buy",
                 "Success",

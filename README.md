@@ -38,3 +38,38 @@ But what if an app can help us to keep track of our investment?
 - Save my username, password and content of my wallet 
 - Reload my wallet content, including the stocks I own and their corresponding value
  
+
+##### Phase 4 Task 2:
+Print log: <br>
+Mon Mar 28 23:07:49 PDT 2022 <br>
+buying 1 shares of the vfv stock with the price of 100.0 <br>
+Mon Mar 28 23:08:01 PDT 2022 <br>
+buying 2 shares of the vbal stock with the price of 35.0 <br>
+Mon Mar 28 23:08:19 PDT 2022 <br>
+buying 2 shares of the tesla stock with the price of 1000.0 <br>
+Mon Mar 28 23:08:28 PDT 2022 <br>
+selling 1 vfv with the price of 150.0 <br>
+Mon Mar 28 23:08:38 PDT 2022 <br>
+unsuccessful attempt to sell -1 tesla with the price of 150.0 <br>
+Mon Mar 28 23:08:46 PDT 2022 <br>
+selling 1 tesla with the price of 1500.0 <br>
+Mon Mar 28 23:08:55 PDT 2022 <br>
+unsuccessful attempt to sell 3 vbal with the price of 1500.0 <br>
+Mon Mar 28 23:09:02 PDT 2022 <br>
+selling 1 vbal with the price of 50.0 
+
+##### Phase 4 Task 3:
+I have a main class called Navigator that has a field for all the
+panels and keeps as well as Investment, UserProfileAndWallet, and StocksInWallet
+It is the entry point of the app that controls all the user interaction and asks for the appropriate functionality
+that is introduced in the model package. The most two important of those are buying and selling stocks
+by calling the corresponding methods on investment class and changing the stocksInWallet accordingly. <br>
+I used hierarchy to abstract the common functions for login and signup panels as well as for buy and sell panels.
+This helped with the cohesion of the code and reduced coupling significantly. <br>
+I also used the observer pattern so that every time the user buys or sells a stock, I would update the bar chart and wallet
+panels correspondingly. <br> <br>
+Improvements I would want to make:
+- Thinking of ways to reference fewer model classes from navigator; especially not referencing both stocksInWallet and UserProfileAndWallet
+- Applying design patterns so that fewer classes have a reference to StocksInWallet class, maybe by applying a huge observer pattern
+- Using more sophisticated built-in methods for the selling stocks in investment class and removing its reference to PurchaseStock
+
