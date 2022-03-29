@@ -305,7 +305,7 @@ public class UserInteraction {
     // MODIFIES: this
     // EFFECT: changing userProfileAndWallet when user changes their StocksInWallet
     public void changeUserProfileAndWallet() {
-        userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);
+        userProfileAndWallet.setAssociatedWallets(userProfile, stocksInWallet);
     }
 
     // MODIFIES: this

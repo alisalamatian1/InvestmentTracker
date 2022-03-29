@@ -20,8 +20,8 @@ public class UserProfileAndWalletTest {
 
     @Test
     public void constructorTest() {
-        assertEquals(stocksInWallet, userProfileAndWallet.getAssociatedWallet().get(userProfile));
-        assertEquals(1, userProfileAndWallet.getAssociatedWallet().size());
+        assertEquals(stocksInWallet, userProfileAndWallet.getWallet());
+        assertEquals(userProfile, userProfileAndWallet.getProfile());
     }
 
     @Test
@@ -29,18 +29,16 @@ public class UserProfileAndWalletTest {
         userProfile = new UserProfile("Mo", "87654321");
         stocksInWallet = new StocksInWallet();
         stocksInWallet.addPurchasedStock(new PurchasedStock(new Stock ("VFV"), 2, 100));
-        userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);
-        assertEquals(stocksInWallet, userProfileAndWallet.getAssociatedWallet().get(userProfile));
-        assertEquals(2, userProfileAndWallet.getAssociatedWallet().size());
-        assertEquals(2, userProfileAndWallet.getAssociatedWallet().get(userProfile).getStocks().get(0).getNumber());
+        userProfileAndWallet.setAssociatedWallets(userProfile, stocksInWallet);
+        assertEquals(stocksInWallet, userProfileAndWallet.getWallet());
+        assertEquals(2, userProfileAndWallet.getWallet().getStocks().get(0).getNumber());
 
         userProfile = new UserProfile("Kousha", "87654311");
         stocksInWallet = new StocksInWallet();
         stocksInWallet.addPurchasedStock(new PurchasedStock(new Stock ("TSLA"), 3, 100));
-        userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);
-        assertEquals(stocksInWallet, userProfileAndWallet.getAssociatedWallet().get(userProfile));
-        assertEquals(3, userProfileAndWallet.getAssociatedWallet().size());
-        assertEquals(3, userProfileAndWallet.getAssociatedWallet().get(userProfile).getStocks().get(0).getNumber());
+        userProfileAndWallet.setAssociatedWallets(userProfile, stocksInWallet);
+        assertEquals(stocksInWallet, userProfileAndWallet.getWallet());
+        assertEquals(3, userProfileAndWallet.getWallet().getStocks().get(0).getNumber());
 
     }
 }

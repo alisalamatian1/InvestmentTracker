@@ -34,6 +34,7 @@ public class PurchasedStock {
         return stock;
     }
 
+    // EFFECTS: making a JSONObject of PurchasedStock
     public JSONObject  toJson() {
         JSONObject json = new JSONObject();
         json.put("Stock", stock.toJson());

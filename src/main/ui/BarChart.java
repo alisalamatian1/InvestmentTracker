@@ -12,7 +12,7 @@ public class BarChart extends JPanel {
     private static final int WIDTH = 600;
     private static final int Y_COORDINATE = HEIGHT - 10;
     private static final int X_2_LINE = WIDTH * 2;
-    private final StocksInWallet stocksInWallet;
+    private StocksInWallet stocksInWallet;
     private String label;
     private final JLabel stockLabels;
     private boolean loaded = false;

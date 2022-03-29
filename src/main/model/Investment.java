@@ -21,9 +21,11 @@ public class Investment {
     // MODIFIES: this
     // EFFECT: Selling the chosen n stocks by removing the first n of the particular stock from the user's wallet and
     // reporting the profit; if not enough funding giving them an error
-    public Boolean sellingStocks(String tickerSoldStock, int numberOfToSellShares, double sellingPrice)
+    public boolean sellingStocks(String tickerSoldStock, int numberOfToSellShares, double sellingPrice)
             throws NegativeShareSellingException {
         if (numberOfToSellShares <= 0) {
+            EventLog.getInstance().logEvent(new Event("unsuccessful attempt to sell " + numberOfToSellShares
+                    + " " + tickerSoldStock + " with the price of " + sellingPrice));
             throw new NegativeShareSellingException();
         }
         this.sellingPrice = sellingPrice;
@@ -39,8 +41,8 @@ public class Investment {
     }
 
     // EFFECT: finding the stocks in the wallet and reducing the number of owned shares by the wanted amount
-    private Boolean findingTheStockInWalletAndReducing(int numberOfToSellShares, String tickerSoldStock) {
-        Boolean enoughFunding = true;
+    private boolean findingTheStockInWalletAndReducing(int numberOfToSellShares, String tickerSoldStock) {
+        boolean enoughFunding = true;
         int counter = 0;
         int totalRequestedSharesInWallet = 0;
         ArrayList<Integer> indexes = new ArrayList<>();
@@ -68,7 +70,7 @@ public class Investment {
 
     // EFFECT: checking if the user has enough of the stock that they are selling in their account
     // reducing the number if they had and returning true, returning false otherwise
-    private Boolean checkingForEnoughFundingAndActingAccordingly(int totalRequestedSharesInWallet,
+    private boolean checkingForEnoughFundingAndActingAccordingly(int totalRequestedSharesInWallet,
                                                              int numberOfToSellShares, ArrayList<Integer> indexes) {
 
         if (totalRequestedSharesInWallet < numberOfToSellShares) {

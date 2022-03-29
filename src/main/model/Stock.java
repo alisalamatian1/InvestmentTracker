@@ -27,6 +27,7 @@ public class Stock {
         return ticker;
     }
 
+    // EFFECTS: making a JSONObject of Stock
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("name", name);

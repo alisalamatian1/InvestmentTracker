@@ -27,6 +27,7 @@ public class StocksInWallet {
         return stocks;
     }
 
+    // EFFECTS: making a JSONObject of StocksInWallet
     public JSONArray toJson() {
         JSONArray json = new JSONArray();
         for (PurchasedStock purchasedStock : stocks) {

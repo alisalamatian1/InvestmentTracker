@@ -10,25 +10,18 @@ public class UserProfileAndWallet {
     private UserProfile profile;
     private StocksInWallet wallet;
     private double profit;
-    private HashMap<UserProfile, StocksInWallet> associatedWallet = new HashMap<>();
 
     // EFFECT: constructing a UserProfileAndWallet by putting users profile and stocks in a list
     public UserProfileAndWallet(UserProfile profile, StocksInWallet stocks) {
         this.profile = profile;
         this.wallet = stocks;
-        associatedWallet.put(profile,stocks);
     }
 
     // MODIFY: this
     // EFFECT: adding the given user profile and stocks to the list of associated wallets
-    public void addAssociatedWallets(UserProfile profile, StocksInWallet stocks) {
+    public void setAssociatedWallets(UserProfile profile, StocksInWallet stocks) {
         this.profile = profile;
         this.wallet = stocks;
-        associatedWallet.put(profile,stocks);
-    }
-
-    public HashMap<UserProfile, StocksInWallet> getAssociatedWallet() {
-        return associatedWallet;
     }
 
     public StocksInWallet getWallet() {
@@ -47,6 +40,7 @@ public class UserProfileAndWallet {
         return profit;
     }
 
+    // EFFECTS: making a JSONObject of UserProfileAndWallets
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("profile", profile.toJson());
@@ -55,6 +49,7 @@ public class UserProfileAndWallet {
         return json;
     }
 
+    // EFFECTS: adding the result of toJson file with the userProfileAndWallets key
     public JSONObject toJsonObject() {
         JSONObject json = new JSONObject();
         json.put("userProfileAndWallets", toJson());

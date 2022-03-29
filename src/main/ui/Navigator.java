@@ -326,9 +326,8 @@ public class Navigator {
         String ticker = sellPanel.getTicker().getText();
         int numberOfShares = Integer.parseInt(sellPanel.getNumSharesText().getText());
         double price = Double.parseDouble(sellPanel.getPriceText().getText());
-        Boolean wasSuccessful = null;
         try {
-            wasSuccessful = investment.sellingStocks(ticker, numberOfShares, price);
+            boolean wasSuccessful = investment.sellingStocks(ticker, numberOfShares, price);
             showMessage(wasSuccessful);
             userProfileAndWallet.setProfit(investment.getProfit());
             this.profit = investment.getProfit();
@@ -359,7 +358,7 @@ public class Navigator {
     // MODIFIES: this
     // EFFECT: changing userProfileAndWallet when user changes their StocksInWallet
     public void changeUserProfileAndWallet() {
-        userProfileAndWallet.addAssociatedWallets(userProfile, stocksInWallet);
+        userProfileAndWallet.setAssociatedWallets(userProfile, stocksInWallet);
     }
 
     // MODIFIES: this

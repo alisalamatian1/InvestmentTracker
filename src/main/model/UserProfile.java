@@ -22,6 +22,7 @@ public class UserProfile {
         return userName;
     }
 
+    // EFFECTS: making a JSONObject of UserProfile
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("username", userName);
