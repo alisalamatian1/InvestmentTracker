@@ -31,8 +31,8 @@ public class Investment extends Subject {
         this.sellingPrice = sellingPrice;
         boolean isSellPossible = findingTheStockInWalletAndReducing(numberOfToSellShares, tickerSoldStock);
         if (isSellPossible) {
-            EventLog.getInstance().logEvent(new Event("selling " + numberOfToSellShares + " " + tickerSoldStock
-                    + " with the price of " + sellingPrice));
+            EventLog.getInstance().logEvent(new Event("selling " + numberOfToSellShares + " shares of the "
+                    + tickerSoldStock + " stock with the price of " + sellingPrice));
             notifyAllObserver();
         } else {
             EventLog.getInstance().logEvent(new Event("unsuccessful attempt to sell " + numberOfToSellShares

@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 
 // class representing a signUp page
 public class SignUpPanel extends EnterPanel {
-    private JsonWriting jsonWriting;
 
     // EFFECTS: constructing a signUp panel
     public SignUpPanel() {
@@ -23,7 +22,7 @@ public class SignUpPanel extends EnterPanel {
         UserProfile userProfile = new UserProfile(userName, password);
         UserProfileAndWallet userProfileAndWallet =
                 new UserProfileAndWallet(userProfile, new StocksInWallet());
-        jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userName
+        JsonWriting jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userName
                 + password + ".json");
         jsonWriting.open();
         jsonWriting.write(userProfileAndWallet);
