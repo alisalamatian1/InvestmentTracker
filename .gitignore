@@ -1,5 +1,5 @@
 *.class
 workspace.xml
-/src/main/java/constants
-/.idea
-/lib
+src/main/java/constants/
+lib
+.idea/
