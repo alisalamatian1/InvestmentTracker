@@ -63,9 +63,7 @@ public class Investment extends Subject {
         } else {
             List<PurchasedStock> temp = tickerToListPurchasedStock.get(tickerSoldStock);
             int remaining = -1;
-            Iterator<PurchasedStock> i = temp.iterator();
-            while (i.hasNext()) {
-                PurchasedStock ps = i.next();
+            for (PurchasedStock ps : temp) {
                 int number = ps.getNumber();
                 if (remaining == 0) {
                     break;
@@ -75,7 +73,8 @@ public class Investment extends Subject {
                     remaining = numberOfToSellShares - number;
                     numberOfToSellShares -= number;
                     calculateProfit(ps.getPrice(), number);
-                    i.remove();
+                    EventLog.getInstance().logEvent(new Event("sold " + number + " of shares of " + tickerSoldStock + " and the PurchasedStock " + ps.toString()));
+                    stocksInWallet.getStocks().remove(ps);
                 } else {
                     ps.decreasingTheNumberOfShares(numberOfToSellShares);
                     remaining = 0;

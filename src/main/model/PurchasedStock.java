@@ -42,4 +42,13 @@ public class PurchasedStock {
         json.put("price", price);
         return json;
     }
+
+    @Override
+    public String toString() {
+        return "PurchasedStock{" +
+                "stock=" + stock +
+                ", number=" + number +
+                ", price=" + price +
+                '}';
+    }
 }

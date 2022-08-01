@@ -34,4 +34,12 @@ public class Stock {
         json.put("ticker", ticker);
         return json;
     }
+
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "name='" + name + '\'' +
+                ", ticker='" + ticker + '\'' +
+                '}';
+    }
 }
