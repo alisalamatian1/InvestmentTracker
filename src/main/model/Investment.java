@@ -4,6 +4,9 @@ package model;
 import model.exceptions.NegativeShareSellingException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 
 // This class provides functionality to buy and sell stocks
@@ -14,8 +17,13 @@ public class Investment extends Subject {
     private double profit = 0.0;
     private double sellingPrice = 0.0;
 
+    private HashMap<String, List<PurchasedStock>> tickerToListPurchasedStock;
+    private HashMap<String, Integer> tickerToNumberOfShares;
+
     // EFFECT: constructing an Investment object with the given typeOfInvestment and calling a method to show actions
     public Investment() {
+        tickerToListPurchasedStock = new HashMap<>();
+        tickerToNumberOfShares = new HashMap<>();
     }
 
     // MODIFIES: this
@@ -23,22 +31,73 @@ public class Investment extends Subject {
     // reporting the profit; if not enough funding giving them an error
     public boolean sellingStocks(String tickerSoldStock, int numberOfToSellShares, double sellingPrice)
             throws NegativeShareSellingException {
-        if (numberOfToSellShares <= 0) {
-            EventLog.getInstance().logEvent(new Event("unsuccessful attempt to sell " + numberOfToSellShares
-                    + " " + tickerSoldStock + " with the price of " + sellingPrice));
-            throw new NegativeShareSellingException();
-        }
+//        if (numberOfToSellShares <= 0) {
+//            EventLog.getInstance().logEvent(new Event("unsuccessful attempt to sell " + numberOfToSellShares
+//                    + " " + tickerSoldStock + " with the price of " + sellingPrice));
+//            throw new NegativeShareSellingException();
+//        }
+//        this.sellingPrice = sellingPrice;
+//        boolean isSellPossible = findingTheStockInWalletAndReducing(numberOfToSellShares, tickerSoldStock);
+//        if (isSellPossible) {
+//            EventLog.getInstance().logEvent(new Event("selling " + numberOfToSellShares + " shares of the "
+//                    + tickerSoldStock + " stock with the price of " + sellingPrice));
+//            notifyAllObserver();
+//        } else {
+//            EventLog.getInstance().logEvent(new Event("unsuccessful attempt to sell " + numberOfToSellShares
+//                    + " " + tickerSoldStock + " with the price of " + sellingPrice));
+//        }
+//        return isSellPossible;
         this.sellingPrice = sellingPrice;
-        boolean isSellPossible = findingTheStockInWalletAndReducing(numberOfToSellShares, tickerSoldStock);
-        if (isSellPossible) {
+        if (numberOfToSellShares < 0) {
+            throw (new NegativeShareSellingException());
+        }
+        initializeMaps();
+        if (!tickerToNumberOfShares.containsKey(tickerSoldStock)) {
+            EventLog.getInstance().logEvent(new Event("unsuccessful attempt to sell " + numberOfToSellShares
+                    + " " + tickerSoldStock + " with the price of " + sellingPrice + "due to not owning any of that stock"));
+            return false;
+        } else if(tickerToNumberOfShares.get(tickerSoldStock) < numberOfToSellShares) {
+            EventLog.getInstance().logEvent(new Event("unsuccessful attempt to sell " + numberOfToSellShares
+                    + " " + tickerSoldStock + " with the price of " + sellingPrice + "due to not having enough of that stock" + "and selling shares #: " + numberOfToSellShares));
+            return false;
+        } else {
+            List<PurchasedStock> temp = tickerToListPurchasedStock.get(tickerSoldStock);
+            int remaining = -1;
+            Iterator<PurchasedStock> i = temp.iterator();
+            while (i.hasNext()) {
+                PurchasedStock ps = i.next();
+                int number = ps.getNumber();
+                if (remaining == 0) {
+                    break;
+                }
+                if (number < numberOfToSellShares) {
+                    ps.decreasingTheNumberOfShares(number);
+                    remaining = numberOfToSellShares - number;
+                    numberOfToSellShares -= number;
+                    calculateProfit(ps.getPrice(), number);
+                    i.remove();
+                } else {
+                    ps.decreasingTheNumberOfShares(numberOfToSellShares);
+                    remaining = 0;
+                    calculateProfit(ps.getPrice(), numberOfToSellShares);
+                }
+            }
             EventLog.getInstance().logEvent(new Event("selling " + numberOfToSellShares + " shares of the "
                     + tickerSoldStock + " stock with the price of " + sellingPrice));
             notifyAllObserver();
-        } else {
-            EventLog.getInstance().logEvent(new Event("unsuccessful attempt to sell " + numberOfToSellShares
-                    + " " + tickerSoldStock + " with the price of " + sellingPrice));
+            return true;
         }
-        return isSellPossible;
+    }
+
+    private void initializeMaps() {
+        List<PurchasedStock> purchasedStockList = stocksInWallet.getStocks();
+        for (PurchasedStock ps : purchasedStockList) {
+            String ticker = ps.getStock().getTicker();
+            List<PurchasedStock> temp = tickerToListPurchasedStock.getOrDefault(ticker, new ArrayList<>());
+            temp.add(ps);
+            tickerToListPurchasedStock.put(ticker, temp);
+            tickerToNumberOfShares.put(ticker, tickerToNumberOfShares.getOrDefault(ticker, 0) + ps.getNumber());
+        }
     }
 
     // EFFECT: finding the stocks in the wallet and reducing the number of owned shares by the wanted amount
