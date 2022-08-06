@@ -25,10 +25,5 @@ public class SignUpPanel extends EnterPanel {
         UserProfileAndWallet userProfileAndWallet =
                 new UserProfileAndWallet(userProfile, new StocksInWallet());
         DbConnector.write(userProfileAndWallet, id);
-        JsonWriting jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userName
-                + password + ".json");
-        jsonWriting.open();
-        jsonWriting.write(userProfileAndWallet);
-        jsonWriting.close();
     }
 }

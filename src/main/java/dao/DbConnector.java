@@ -29,16 +29,17 @@ public class DbConnector {
         }
     }
 
-    public static String select(String username, String password) {
+    public static String select(String id) {
         setConnection();
-        String id = username + password;
         try{
             PreparedStatement statement = connection.prepareStatement(Queries.SELECT_ALL);
             statement.setString(1, id);
             System.out.println(statement.toString());
             resultSet = statement.executeQuery();
             while(resultSet.next()) {
-                return resultSet.getString("profileAndWallet");
+                String result = resultSet.getString("profileAndWallet");
+                System.out.println(result);
+                return result;
             }
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -99,5 +100,40 @@ public class DbConnector {
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
         }
+    }
+    public static String checkIfIdExists(String id) {
+        setConnection();
+        try{
+            PreparedStatement statement = connection.prepareStatement(Queries.SELECT_COUNT);
+            statement.setString(1, id);
+            System.out.println(statement.toString());
+            resultSet = statement.executeQuery();
+            while(resultSet.next()) {
+                return resultSet.getString("count(*)");
+            }
+        } catch (SQLException ex) {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException sqlEx) {
+                    System.out.println(sqlEx.getMessage());
+                }
+                resultSet = null;
+            }
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException sqlEx) {
+                    System.out.println(sqlEx.getMessage());
+                }
+                statement = null;
+            }
+        }
+        return "";
     }
 }

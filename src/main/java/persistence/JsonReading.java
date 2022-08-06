@@ -23,14 +23,6 @@ public class JsonReading {
         this.source = source;
     }
 
-//    // EFFECTS: reads UserProfileAndWallet from file and returns it;
-//    // throws IOException if an error occurs reading data from file
-//    public UserProfileAndWallet read() throws IOException {
-//        String jsonData = readFile(source);
-//        json = new JSONObject(jsonData);
-//        return parseUserProfileAndWallet();
-//    }
-
     // EFFECTS: reads UserProfileAndWallet from file and returns it;
     // throws IOException if an error occurs reading data from file
     public static UserProfileAndWallet read(String userString) throws IOException {

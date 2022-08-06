@@ -1,5 +1,6 @@
 package ui;
 
+import dao.DbConnector;
 import persistence.JsonReading;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,12 +18,8 @@ public class LoginPanel extends EnterPanel {
     public boolean checkForProfile() {
         String userName = userText.getText();
         String password = passwordText.getText();
-        // todo: check the table for that id
-        if (checkFileExists(JSON_STORAGE + "/" + userName + password + ".json")) {
-            jsonReading = new JsonReading(JSON_STORAGE + "/" + userName + password + ".json");
-            return true;
-        }
-        return false;
+        String id = userName + password;
+        return !DbConnector.checkIfIdExists(id).equals("0");
     }
 
     // EFFECTS: checks if the userName with the given password exists by checking file path

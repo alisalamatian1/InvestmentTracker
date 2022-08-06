@@ -363,11 +363,6 @@ public class Navigator {
     // MODIFIES: this
     // EFFECTS: saving the user info and writing that into the database
     public void saveUserInfo() throws FileNotFoundException {
-        jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userProfileAndWallet.getProfile().getUserName()
-                + userProfileAndWallet.getProfile().getPassword() + ".json");
-        jsonWriting.open();
-        jsonWriting.write(userProfileAndWallet);
-        jsonWriting.close();
         String id = userProfileAndWallet.getProfile().getUserName() + userProfileAndWallet.getProfile().getPassword();
         DbConnector.update(userProfileAndWallet, id);
     }
