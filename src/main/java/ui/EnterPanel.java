@@ -1,5 +1,6 @@
 package ui;
 
+import dao.DbConnector;
 import model.UserProfileAndWallet;
 import persistence.JsonReading;
 
@@ -45,11 +46,22 @@ public abstract class EnterPanel extends JPanel {
     // MODIFIES: this
     // EFFECTS: loading data from database
     public UserProfileAndWallet loadData() {
-        jsonReading = new JsonReading(JSON_STORAGE + "/" + userText.getText()
-               + passwordText.getText() + ".json");
+        String userName = userText.getText();
+        String password = passwordText.getText();
+        jsonReading = new JsonReading(JSON_STORAGE + "/" + userName
+               + password + ".json");
         UserProfileAndWallet userProfileAndWallet = null;
+//        try {
+//            userProfileAndWallet = jsonReading.read();
+//        } catch (IOException e) {
+//            JOptionPane.showMessageDialog(this,
+//                    "Sorry we cannot find you in the system",
+//                    "Not found",
+//                    JOptionPane.ERROR_MESSAGE);
+//        }
+        String userString = DbConnector.select(userName, password);
         try {
-            userProfileAndWallet = jsonReading.read();
+            userProfileAndWallet = JsonReading.read(userString);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this,
                     "Sorry we cannot find you in the system",

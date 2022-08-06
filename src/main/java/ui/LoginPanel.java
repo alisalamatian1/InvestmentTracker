@@ -17,6 +17,7 @@ public class LoginPanel extends EnterPanel {
     public boolean checkForProfile() {
         String userName = userText.getText();
         String password = passwordText.getText();
+        // todo: check the table for that id
         if (checkFileExists(JSON_STORAGE + "/" + userName + password + ".json")) {
             jsonReading = new JsonReading(JSON_STORAGE + "/" + userName + password + ".json");
             return true;

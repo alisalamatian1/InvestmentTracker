@@ -1,5 +1,6 @@
 package ui;
 
+import dao.DbConnector;
 import model.*;
 import model.exceptions.NegativeShareSellingException;
 import persistence.JsonWriting;
@@ -367,6 +368,8 @@ public class Navigator {
         jsonWriting.open();
         jsonWriting.write(userProfileAndWallet);
         jsonWriting.close();
+        String id = userProfileAndWallet.getProfile().getUserName() + userProfileAndWallet.getProfile().getPassword();
+        DbConnector.update(userProfileAndWallet, id);
     }
 
     // MODIFIES: this

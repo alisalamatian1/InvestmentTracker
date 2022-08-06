@@ -1,5 +1,6 @@
 package ui;
 
+import dao.DbConnector;
 import model.StocksInWallet;
 import model.UserProfile;
 import model.UserProfileAndWallet;
@@ -19,9 +20,11 @@ public class SignUpPanel extends EnterPanel {
     public void saveUserInfo() throws FileNotFoundException {
         String userName = userText.getText();
         String password = passwordText.getText();
+        String id= userName + password;
         UserProfile userProfile = new UserProfile(userName, password);
         UserProfileAndWallet userProfileAndWallet =
                 new UserProfileAndWallet(userProfile, new StocksInWallet());
+        DbConnector.write(userProfileAndWallet, id);
         JsonWriting jsonWriting = new JsonWriting(JSON_STORAGE + "/" + userName
                 + password + ".json");
         jsonWriting.open();

@@ -16,18 +16,25 @@ import java.util.stream.Stream;
 // citation: this is the similar code that can be found on the repository: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonReading {
     private final String source;
-    private JSONObject json;
+    private static JSONObject json;
 
     // EFFECTS: constructs reader to read from source file
     public JsonReading(String source) {
         this.source = source;
     }
 
+//    // EFFECTS: reads UserProfileAndWallet from file and returns it;
+//    // throws IOException if an error occurs reading data from file
+//    public UserProfileAndWallet read() throws IOException {
+//        String jsonData = readFile(source);
+//        json = new JSONObject(jsonData);
+//        return parseUserProfileAndWallet();
+//    }
+
     // EFFECTS: reads UserProfileAndWallet from file and returns it;
     // throws IOException if an error occurs reading data from file
-    public UserProfileAndWallet read() throws IOException {
-        String jsonData = readFile(source);
-        json = new JSONObject(jsonData);
+    public static UserProfileAndWallet read(String userString) throws IOException {
+        json = new JSONObject(userString);
         return parseUserProfileAndWallet();
     }
 
@@ -42,7 +49,7 @@ public class JsonReading {
     }
 
     // EFFECTS: parses userProfileAndWallet by taking out profile and stocksInWallet and making an object
-    private UserProfileAndWallet parseUserProfileAndWallet() {
+    private static UserProfileAndWallet parseUserProfileAndWallet() {
         String password = matchFinder("password\":\"([0-9]*)");
         String username = matchFinder("username\":\"([a-zA-Z]*)");
         String profitString = matchFinder("profit\":(-?[0-9]*)");
@@ -64,7 +71,7 @@ public class JsonReading {
 
     // REQUIRES: regex must have at least one group
     // EFFECTS: searching for the given pattern and returning the wanted string based on that
-    public String matchFinder(String regex) {
+    public static String matchFinder(String regex) {
         String key = "userProfileAndWallets";
         String value = "";
         Pattern pattern = Pattern.compile(regex);
@@ -77,7 +84,7 @@ public class JsonReading {
 
     // REQUIRES: regex must have at least one group
     // EFFECTS: searching for the given pattern and returning the wanted string based on that
-    private ArrayList<String> matchFinderArray(String regex) {
+    private static ArrayList<String> matchFinderArray(String regex) {
         String key = "userProfileAndWallets";
         ArrayList<String> values = new ArrayList<>();
         Pattern pattern = Pattern.compile(regex);
